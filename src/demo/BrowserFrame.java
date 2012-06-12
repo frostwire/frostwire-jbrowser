@@ -18,10 +18,15 @@
  * USA.
  */
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import com.frostwire.gui.browser.windows.BrComponentEvent;
 import com.frostwire.gui.browser.windows.BrComponentListener;
+import com.frostwire.gui.browser.windows.InternetExplorerBrowser;
 
 
 /**
@@ -31,8 +36,10 @@ import com.frostwire.gui.browser.windows.BrComponentListener;
 public class BrowserFrame extends javax.swing.JFrame
 implements BrComponentListener
 {
-
     private static final long serialVersionUID = -7065448910990348234L;
+    
+    private JMenuItem menuRunJS;
+    private InternetExplorerBrowser brMain;
     
     /** Creates new form BrowserFrame */
     public BrowserFrame() {
@@ -47,7 +54,7 @@ implements BrComponentListener
     private void initComponents() {
         jPanel1 = new javax.swing.JPanel();
         bnRefresh = new javax.swing.JButton();
-        brMain = new com.frostwire.gui.browser.windows.BrComponent();
+        brMain = new InternetExplorerBrowser();
         ieToolBar = new javax.swing.JToolBar();
         bnBack = new javax.swing.JButton();
         bnForward = new javax.swing.JButton();
@@ -234,8 +241,18 @@ implements BrComponentListener
         fileJMenu.add(miExit);
 
         mainJMenuBar.add(fileJMenu);
+        
+        menuRunJS = new JMenuItem();
+        menuRunJS.setText("Run JS");
+        menuRunJS.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                menuRunJS_actionPerformed(e);
+            }
+        });
 
         toolsJMenu.setText("Tools");
+        toolsJMenu.add(menuRunJS);
 
         mainJMenuBar.add(toolsJMenu);
 
@@ -256,6 +273,10 @@ implements BrComponentListener
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    protected void menuRunJS_actionPerformed(ActionEvent e) {
+        brMain.runJS("alert('test alert');");
+    }
 
     private void edStatusTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edStatusTextActionPerformed
         // TODO add your handling code here:
@@ -363,7 +384,7 @@ implements BrComponentListener
     private javax.swing.JButton bnRefresh;
     private javax.swing.JButton bnReload;
     private javax.swing.JButton bnStop;
-    private com.frostwire.gui.browser.windows.BrComponent brMain;
+    
     private javax.swing.JTextField edAddress;
     private javax.swing.JTextField edStatusText;
     private javax.swing.JMenu fileJMenu;

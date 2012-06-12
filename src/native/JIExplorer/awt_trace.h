@@ -185,7 +185,7 @@ namespace ZZ{
 
     memcpy(szBuffer1, szTime, iTimeLen*sizeof(TCHAR));
     _tcscat(szBuffer1, _T("\n"));
-    DbgOut( szBuffer1 ); 
+    _ftprintf(stderr, szBuffer1 ); 
   }
   inline void snTrace(LPCTSTR lpszFormat, ... ) 
   {
@@ -230,7 +230,7 @@ namespace ZZ{
 #else // _MDEBUG
   #define STRACE      ZZ::snTraceEmp
 #endif// _MDEBUG
-#define STRACE0       ZZ::snTraceEmp
+#define STRACE0       ZZ::snTrace
 #define SASSERT       snAssert
 struct CLogEntryPoint1 {
     LPCTSTR m_lpTitle;

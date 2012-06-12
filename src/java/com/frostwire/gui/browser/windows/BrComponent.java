@@ -341,7 +341,7 @@ public class BrComponent
         setFocusable(true);
         addFocusListener(this);
         setRequestFocusEnabled(true);
-        brPeer = PeerClassFactory.createBrComponentPeer(this);
+        brPeer = new WBrComponentPeer(this);
     }
 
     /**

@@ -48,7 +48,7 @@ void  OLE_CoPump();
 
 struct BrowserAction
 {
-    BrowserAction():m_iRetryCount(5){}; 
+    BrowserAction():m_iRetryCount(0){}; 
     virtual ~BrowserAction() {}
     virtual HRESULT Do(JNIEnv *env) = 0;
     virtual void throwExeption(JNIEnv *env, const char *msg, HRESULT hr) {
