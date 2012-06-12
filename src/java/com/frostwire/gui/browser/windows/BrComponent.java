@@ -78,7 +78,7 @@ public class BrComponent
      *     ....
      * }</pre></code></p>
      */
-    public static boolean DESIGN_MODE = true;
+    public static boolean DESIGN_MODE = false;
     
     /**
      * String for java-stream URL navigation.
