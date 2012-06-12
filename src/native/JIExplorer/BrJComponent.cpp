@@ -83,7 +83,7 @@ void BrJComponent::initIDs(JNIEnv *env, jclass clazz)
 {
     ms_jcidBrComponent = getGlobalJavaClazz(
         env,
-        "org/jdic/web/BrComponent"
+        "com/frostwire/gui/browser/windows/BrComponent"
     );
     ms_jcidWBrComponent_x = env->GetFieldID(ms_jcidBrComponent, "x", "I");
     ms_jcidWBrComponent_y = env->GetFieldID(ms_jcidBrComponent, "y", "I");
@@ -110,7 +110,7 @@ void BrJComponent::initIDs(JNIEnv *env, jclass clazz)
         "handlePaint", 
         "(IIII)V");
     ms_jcidWBrComponentPeer_data = env->GetFieldID(clazz, "data", "J");
-    ms_jcidWBrComponentPeer_target = env->GetFieldID(clazz, "target", "Lorg/jdic/web/BrComponent;");
+    ms_jcidWBrComponentPeer_target = env->GetFieldID(clazz, "target", "Lcom/frostwire/gui/browser/windows/BrComponent;");
 }
 
 
@@ -692,10 +692,10 @@ HRESULT BrJComponent::Connect(
 extern "C" {
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    initIDs
   */
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_initIDs(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_initIDs(
     JNIEnv *env, 
     jclass cls)
 {
@@ -703,7 +703,7 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_initIDs(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    create
   */
 struct CreateAction : public BrowserAction
@@ -726,7 +726,7 @@ struct CreateAction : public BrowserAction
     }
 };
 
-JNIEXPORT jlong JNICALL Java_org_jdic_web_peer_WBrComponentPeer_create(
+JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_create(
     JNIEnv *env, 
     jobject self,
     jlong parent,
@@ -753,7 +753,7 @@ JNIEXPORT jlong JNICALL Java_org_jdic_web_peer_WBrComponentPeer_create(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    destroy
   */
 struct DestroyAction : public BrowserAction
@@ -768,7 +768,7 @@ struct DestroyAction : public BrowserAction
         return S_OK;
     }
 };
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_destroy(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_destroy(
     JNIEnv *env, 
     jobject self)
 {
@@ -926,7 +926,7 @@ struct ExecJSAction : public BrowserAction
     }
 };
 
-JNIEXPORT jstring JNICALL Java_org_jdic_web_peer_WBrComponentPeer_execJS(
+JNIEXPORT jstring JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_execJS(
     JNIEnv *env, 
     jobject self,
     jstring jsCode)
@@ -980,7 +980,7 @@ struct SetURLAction : public BrowserAction{
     }
 };
 
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_setURL(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_setURL(
     JNIEnv *env, 
     jobject self,
     jstring jsURL,
@@ -1000,11 +1000,11 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_setURL(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    laizyUpdate
  * Signature: (jint)
  */
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_laizyUpdate(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_laizyUpdate(
     JNIEnv *env, 
     jobject self,
     jint msDelay)
@@ -1039,10 +1039,10 @@ struct UpdateTransparentAction : public BrowserAction
 };
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    updateTransparentMask
   */
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_updateTransparentMask(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_updateTransparentMask(
     JNIEnv *env, 
     jobject self,
     jint x, jint y, jint w, jint h)
@@ -1077,10 +1077,10 @@ struct SetTransparentAction : public BrowserAction
     }
 };
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    setTransparent
   */
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeSetTransparent(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_nativeSetTransparent(
     JNIEnv *env, 
     jobject self,
     jboolean transparent)
@@ -1099,7 +1099,7 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeSetTranspar
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    setVisible
  */
 struct ShowAction : public BrowserAction
@@ -1120,7 +1120,7 @@ struct ShowAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_setVisible(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_setVisible(
     JNIEnv *env, 
     jobject self,
     jboolean aFlag)
@@ -1137,7 +1137,7 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_setVisible(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    setEnabled
  */
 struct EnableAction : public BrowserAction
@@ -1158,7 +1158,7 @@ struct EnableAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_setEnabled(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_setEnabled(
     JNIEnv *env, 
     jobject self,
     jboolean enabled)
@@ -1175,7 +1175,7 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_setEnabled(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    nativeDraw
  */
 struct NativeDrawAction : public BrowserAction
@@ -1202,7 +1202,7 @@ struct NativeDrawAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeDraw(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_nativeDraw(
     JNIEnv *env, 
     jobject self,
     jint x, jint y, jint w, jint h)
@@ -1219,10 +1219,10 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeDraw(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    ImageData
  */
-JNIEXPORT jintArray JNICALL Java_org_jdic_web_peer_WBrComponentPeer_ImageData(
+JNIEXPORT jintArray JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_ImageData(
     JNIEnv *env, 
     jobject self, 
     jint x, jint y, jint w, jint h)
@@ -1246,7 +1246,7 @@ JNIEXPORT jintArray JNICALL Java_org_jdic_web_peer_WBrComponentPeer_ImageData(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    nativePosOnScreen
  */
 struct ReshapeAction : public BrowserAction
@@ -1267,7 +1267,7 @@ struct ReshapeAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativePosOnScreen(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_nativePosOnScreen(
     JNIEnv *env, 
     jobject self,
     jint x, jint y, jint w, jint h)
@@ -1303,10 +1303,10 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativePosOnScreen
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    clearRgn
  */
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_clearRgn(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_clearRgn(
     JNIEnv *env, 
     jobject self)
 {
@@ -1319,10 +1319,10 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_clearRgn(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    clearRgn
  */
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_clipChild(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_clipChild(
     JNIEnv *env, 
     jobject self,
     jint x, jint y, jint w, jint h)
@@ -1344,10 +1344,10 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_clipChild(
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windowsr_WBrComponentPeer
  * Method:    blockNativeInputHandler
  */
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_blockNativeInputHandler(
+JNIEXPORT void JNICALL Javacom_frostwire_gui_browser_windows_WBrComponentPeer_blockNativeInputHandler(
     JNIEnv *env, 
     jobject self, 
     jboolean bBlockNativeInputHandler)
@@ -1359,13 +1359,13 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_blockNativeInputH
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    nativeSendMouseEvent
  */
 const static int WND_TOP = 0;
 const static int WND_PARENT = 1;
 const static int WND_IE = 2;
-JNIEXPORT jlong JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeSendMouseEvent(
+JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_nativeSendMouseEvent(
     JNIEnv *env, 
     jobject self, 
     jint wnd, jint wm, jint wParam, jint lParam)
@@ -1380,7 +1380,7 @@ JNIEXPORT jlong JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeSendMouseE
     }
     return ret;
 }
-JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeReleaseMouseCapture(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_nativeReleaseMouseCapture(
     JNIEnv *env, 
     jobject self)
 {
@@ -1393,7 +1393,7 @@ JNIEXPORT void JNICALL Java_org_jdic_web_peer_WBrComponentPeer_nativeReleaseMous
 }
 
 
-JNIEXPORT jint JNICALL Java_org_jdic_web_peer_WBrComponentPeer_setActionFiler(
+JNIEXPORT jint JNICALL Java_com_frostwire_gui_browser_windows_WBrComponentPeer_setActionFiler(
     JNIEnv *env, 
     jobject self, 
     jint  flag, jboolean busyState)
