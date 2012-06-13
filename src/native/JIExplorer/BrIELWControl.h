@@ -360,5 +360,6 @@ private:
 	IHTMLDocument2* GetDoc();
 	void NavigateComplete();
 	void AddCustomObject(IDispatch* custObj, BSTR name);
+	void SetBrowserEmulation();
 };
 #endif //_BrIELWControl_H_

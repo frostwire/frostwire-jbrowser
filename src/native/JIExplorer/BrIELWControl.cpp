@@ -22,6 +22,7 @@
 #include "stdafx.h" 
 #include <vector>
 #include "BrIELWControl.h"       // main symbols
+#include <Shlwapi.h>
 IMPLEMENT_SECURITY();
 
 bool IsShiftKeyDown() { return GetKeyState(VK_SHIFT) < 0; }
@@ -210,7 +211,9 @@ HRESULT CBrIELWControl::CreateControl(
 
     if(m_spIWebBrowser2){
         OLE_HRT( DestroyControl() )
-    }                            
+    }
+
+	SetBrowserEmulation();
 
     OLE_HRT( CoCreateInstance(
         CLSID_WebBrowser, 
@@ -909,6 +912,27 @@ void CBrIELWControl::AddCustomObject(IDispatch *custObj, BSTR name)
 
 void CBrIELWControl::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
 {
+}
+
+void CBrIELWControl::SetBrowserEmulation()
+{
+	int version = 9000;
+	HKEY key = NULL;
+	TCHAR* subkey = _T("Software\\Microsoft\\Internet Explorer\\Main\\FeatureControl\\FEATURE_BROWSER_EMULATION");
+	STRACE0(_T("OpeningKEy"));
+	if (RegCreateKeyEx(HKEY_CURRENT_USER, subkey, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE | KEY_QUERY_VALUE, 0, &key, NULL) == 0) {
+		TCHAR lpszPath[MAX_PATH];
+		
+		GetModuleFileName(0, lpszPath, MAX_PATH);
+		
+		PathStripPath(lpszPath);
+		STRACE0(lpszPath);
+		if (RegQueryValueEx(key, lpszPath, 0, NULL, NULL, NULL) == ERROR_FILE_NOT_FOUND) {
+			STRACE0(_T("SetKeyValue"));
+			RegSetValueEx(key, lpszPath, 0, REG_DWORD, (BYTE*)&version, 4);
+		}
+		RegCloseKey(key);
+	}
 }
 
 ////////////////////////

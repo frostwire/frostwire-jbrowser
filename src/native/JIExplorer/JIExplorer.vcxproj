@@ -58,7 +58,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>gdi32.lib;shlwapi.lib;jni\jvm.lib</AdditionalDependencies>
+      <AdditionalDependencies>gdi32.lib;shlwapi.lib;Advapi32.lib;jni\jvm.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)bin/$(ProjectName).dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)lib/$(ProjectName).pdb</ProgramDatabaseFile>
@@ -87,7 +87,7 @@
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>gdi32.lib;shlwapi.lib;jni\jvm.lib</AdditionalDependencies>
+      <AdditionalDependencies>gdi32.lib;shlwapi.lib;Advapi32.lib;jni\jvm.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)bin/$(ProjectName).dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)lib/$(ProjectName).pdb</ProgramDatabaseFile>
