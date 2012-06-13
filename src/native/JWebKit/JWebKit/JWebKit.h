@@ -17,7 +17,7 @@
 extern "C" {
 #endif
     
-    JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_WebKitBrowser_createNSView1
+    JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_macosx_WebKitBrowser_createNSView1
     (JNIEnv *, jobject);
     
 #ifdef __cplusplus

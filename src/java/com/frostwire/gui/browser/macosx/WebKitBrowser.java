@@ -2,7 +2,6 @@ package com.frostwire.gui.browser.macosx;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,10 +27,6 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     private long nsObject = 0;
 
     private String url;
-
-    static {
-        loadLibrary();
-    }
 
     public WebKitBrowser() {
         functions = new HashMap<String, BrowserFunction>();
@@ -160,15 +155,6 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     private void sendMsg(int messageID, Object message) {
         if (nsObject != 0) {
             sendMessage(messageID, message);
-        }
-    }
-
-    private static void loadLibrary() {
-        try {
-            //force loading of libjawt.so/jawt.dll
-            Toolkit.getDefaultToolkit();
-            System.loadLibrary("JWebKit");
-        } catch (Exception e) {
         }
     }
 

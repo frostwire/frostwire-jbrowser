@@ -22,6 +22,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
@@ -35,6 +37,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import com.frostwire.gui.browser.BrowserFactory;
@@ -96,6 +100,11 @@ public class BrowserFrame extends javax.swing.JFrame {
         miExit = new JMenuItem();
         toolsJMenu = new JMenu();
 
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new ImageIcon(getClass().getResource("/images/reload.png")).getImage());
 
@@ -264,7 +273,7 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     private void miExitActionPerformed(ActionEvent evt) {
-        dispose();
+        System.exit(0);
     }
 
     private void onNavigate(ActionEvent evt) {
@@ -291,9 +300,20 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
+        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+
+        System.setProperty("com.apple.eawt.CocoaComponent.CompatibilityMode", "false");
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+        }
+
+        new BrowserFrame().setVisible(true);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BrowserFrame().setVisible(true);
+                //new BrowserFrame().setVisible(true);
             }
         });
     }
