@@ -92,6 +92,9 @@ class CBrIELWControl :
     public IAdviseSink,
     public DWebBrowserEvents2
 {
+private:
+	static const DISPID DISPID_JBROWSER_CALLJAVA = DISPID_VALUE + 1;
+
 public:
     IWebBrowser2Ptr                 m_spIWebBrowser2;
     COLECrossMarshal<IWebBrowser2>  m_ccIWebBrowser2;
@@ -338,10 +341,7 @@ private:
             LPOLESTR* rgszNames,
             UINT cNames,
             LCID lcid,
-            DISPID* rgDispId)
-    {
-        return E_NOTIMPL;
-    }
+            DISPID* rgDispId);
 
     STDMETHOD(Invoke)(
             DISPID dispIdMember,

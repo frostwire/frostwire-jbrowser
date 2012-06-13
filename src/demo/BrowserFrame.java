@@ -275,7 +275,8 @@ implements BrComponentListener
     }// </editor-fold>//GEN-END:initComponents
 
     protected void menuRunJS_actionPerformed(ActionEvent e) {
-        brMain.runJS("alert('test alert');");
+        //brMain.runJS("alert('test alert');");
+        brMain.runJS("window.jbrowser.callJava();");
     }
 
     private void edStatusTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edStatusTextActionPerformed

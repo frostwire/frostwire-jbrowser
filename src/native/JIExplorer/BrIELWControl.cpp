@@ -694,6 +694,23 @@ std::vector<_bstr_t> split(
     return results;
 }
 
+HRESULT STDMETHODCALLTYPE CBrIELWControl::GetIDsOfNames(REFIID riid,
+	LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgDispId)
+{
+	HRESULT hr = S_OK;
+	
+	for (UINT i = 0; i < cNames; i++) {
+		if (wmemcmp(rgszNames[i], _T("callJava"), 8) == 0) {
+			rgDispId[i] = DISPID_JBROWSER_CALLJAVA;
+		} else {
+			rgDispId[i] = DISPID_UNKNOWN;
+			hr = DISP_E_UNKNOWNNAME;
+		}
+	}
+	
+	return hr;
+}
+
 HRESULT CBrIELWControl::Invoke(
         DISPID dispIdMember,
         REFIID riid,
@@ -754,6 +771,9 @@ HRESULT CBrIELWControl::Invoke(
 	case DISPID_DOCUMENTCOMPLETE:
 		STRACE0(_T("DOCUMENT_COMPLETE"));
 		break;
+	case DISPID_JBROWSER_CALLJAVA:
+		STRACE0(_T("Called callJava"));
+		return S_OK;
     default:
         OLE_HR = DISP_E_MEMBERNOTFOUND;
         break;
@@ -834,7 +854,7 @@ IHTMLDocument2 *CBrIELWControl::GetDoc()
 
 void CBrIELWControl::NavigateComplete()
 {
-	this->AddCustomObject(this, _T("jbrowser"));
+	this->AddCustomObject(this, L"jbrowser");
 }
 
 void CBrIELWControl::AddCustomObject(IDispatch *custObj, BSTR name)
