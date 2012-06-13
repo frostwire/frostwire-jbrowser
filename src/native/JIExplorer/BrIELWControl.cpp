@@ -16,6 +16,9 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 // USA.
+
+// FrostWire
+// modified to support javascript->Java interaction
 #include "stdafx.h" 
 #include <vector>
 #include "BrIELWControl.h"       // main symbols
@@ -714,6 +717,7 @@ HRESULT CBrIELWControl::Invoke(
         STRACE0(_T("DISPID_NAVIGATECOMPLETE2"));
         //SendIEEvent(dispIdMember, _T("navigateComplete2"), _T("")/* CreateParamString(pDispParams)*/);
         AddHook();
+		NavigateComplete();
         break;
     case DISPID_PROGRESSCHANGE:
         break;
@@ -747,6 +751,9 @@ HRESULT CBrIELWControl::Invoke(
             return S_OK;
         }
         return DISP_E_MEMBERNOTFOUND;
+	case DISPID_DOCUMENTCOMPLETE:
+		STRACE0(_T("DOCUMENT_COMPLETE"));
+		break;
     default:
         OLE_HR = DISP_E_MEMBERNOTFOUND;
         break;
@@ -807,6 +814,77 @@ HRESULT CBrIELWControl::Invoke(
     }
     OLE_CATCH
     OLE_RETURN_HR
+}
+
+IHTMLDocument2 *CBrIELWControl::GetDoc()
+{
+	IDispatch *dispatch = 0;
+	m_spIWebBrowser2->get_Document(&dispatch);
+
+	if (dispatch == NULL) {
+		return NULL;
+	}
+
+	IHTMLDocument2 *doc;
+	dispatch->QueryInterface(IID_IHTMLDocument2, (void**)&doc);
+	dispatch->Release();
+
+	return doc;
+}
+
+void CBrIELWControl::NavigateComplete()
+{
+	this->AddCustomObject(this, _T("jbrowser"));
+}
+
+void CBrIELWControl::AddCustomObject(IDispatch *custObj, BSTR name)
+{
+	IHTMLDocument2 *doc = GetDoc();
+
+	if (doc == NULL) {
+		return;
+	}
+
+	IHTMLWindow2 *win = NULL;
+	doc->get_parentWindow(&win);
+	doc->Release();
+
+	if (win == NULL) {
+		return;
+	}
+
+	IDispatchEx *winEx;
+	win->QueryInterface(&winEx);
+	win->Release();
+
+	if (winEx == NULL) {
+		return;
+	}
+
+	DISPID dispid; 
+	HRESULT hr = winEx->GetDispID(name, fdexNameEnsure, &dispid);
+
+	if (FAILED(hr)) {
+		return;
+	}
+
+	DISPID namedArgs[] = {DISPID_PROPERTYPUT};
+	DISPPARAMS params;
+	params.rgvarg = new VARIANT[1];
+	params.rgvarg[0].pdispVal = custObj;
+	params.rgvarg[0].vt = VT_DISPATCH;
+	params.rgdispidNamedArgs = namedArgs;
+	params.cArgs = 1;
+	params.cNamedArgs = 1;
+
+	hr = winEx->InvokeEx(dispid, LOCALE_USER_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL); 
+	winEx->Release();
+
+	if (FAILED(hr)) {
+		return;
+	}
+
+	STRACE0(_T("Registered jbrowser object"));
 }
 
 

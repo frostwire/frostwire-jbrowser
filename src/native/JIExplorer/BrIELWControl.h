@@ -353,5 +353,11 @@ private:
             EXCEPINFO  *pExcepInfo,
             UINT  *puArgErr
     );
+
+private:
+
+	IHTMLDocument2* GetDoc();
+	void NavigateComplete();
+	void AddCustomObject(IDispatch *custObj, BSTR name);
 };
 #endif //_BrIELWControl_H_
