@@ -584,4 +584,7 @@ public class WBrComponentPeer implements BrComponentPeer {
     BrComponent target;
     long        data = 0;
 
+    public String callJava(String name, String data) {
+        return name + "-" + data;
+    }
 }    

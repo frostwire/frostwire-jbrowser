@@ -276,7 +276,7 @@ implements BrComponentListener
 
     protected void menuRunJS_actionPerformed(ActionEvent e) {
         //brMain.runJS("alert('test alert');");
-        brMain.runJS("window.jbrowser.callJava();");
+        brMain.runJS("alert(window.jbrowser.callJava('functionName', 'functionData'));");
     }
 
     private void edStatusTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edStatusTextActionPerformed

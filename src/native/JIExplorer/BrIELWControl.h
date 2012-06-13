@@ -166,6 +166,7 @@ public:
         LPTSTR lpName,
         LPTSTR lpValue,
         _bstr_t &bsResult = _bstr_t() );
+	virtual void CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult);
     void PaintScreenShort();
 public:
 //IUnknown
@@ -358,6 +359,6 @@ private:
 
 	IHTMLDocument2* GetDoc();
 	void NavigateComplete();
-	void AddCustomObject(IDispatch *custObj, BSTR name);
+	void AddCustomObject(IDispatch* custObj, BSTR name);
 };
 #endif //_BrIELWControl_H_

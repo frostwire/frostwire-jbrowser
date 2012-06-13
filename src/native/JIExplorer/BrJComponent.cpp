@@ -79,6 +79,8 @@ jmethodID BrJComponent::ms_jcidWBrComponentPeer_handlePaint = NULL;
 jclass    BrJComponent::ms_jcidCursor = NULL;
 jfieldID  BrJComponent::ms_jcidCursor_pData = NULL;
 
+jmethodID BrJComponent::ms_jcidWBrComponentPeer_callJava = NULL;
+
 void BrJComponent::initIDs(JNIEnv *env, jclass clazz)
 {
     ms_jcidBrComponent = getGlobalJavaClazz(
@@ -111,6 +113,11 @@ void BrJComponent::initIDs(JNIEnv *env, jclass clazz)
         "(IIII)V");
     ms_jcidWBrComponentPeer_data = env->GetFieldID(clazz, "data", "J");
     ms_jcidWBrComponentPeer_target = env->GetFieldID(clazz, "target", "Lcom/frostwire/gui/browser/windows/BrComponent;");
+
+	ms_jcidWBrComponentPeer_callJava = env->GetMethodID(
+        clazz, 
+        "callJava", 
+        "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
 }
 
 
@@ -332,6 +339,38 @@ HRESULT BrJComponent::SendIEEvent(
         }
     }
     OLE_RETURN_HR                                 
+}
+
+void BrJComponent::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
+{
+	if (pDispParams->cArgs == 2)
+	{
+		BSTR bstrArgName = pDispParams->rgvarg[1].bstrVal;
+		BSTR bstrArgData = pDispParams->rgvarg[0].bstrVal;
+
+		JNIEnv *env = (JNIEnv *)JNU_GetEnv(jvm, JNI_VERSION_1_2);
+		if (NULL != env)
+		{
+			jstring jsName = JNU_NewStringPlatform(env, bstrArgName);
+			jstring jsData = JNU_NewStringPlatform(env, bstrArgData);
+            
+			jstring jsRes = (jstring)env->CallObjectMethod(
+                    m_this, 
+                    ms_jcidWBrComponentPeer_callJava,
+                    jsName, 
+                    jsData);
+			
+			if (NULL != jsRes)
+			{
+				pVarResult->vt = VT_BSTR;
+				pVarResult->bstrVal = SysAllocString(JStringBuffer(env, jsRes));
+				env->DeleteLocalRef(jsRes);
+			}
+
+            env->DeleteLocalRef(jsName);
+			env->DeleteLocalRef(jsData);
+        }
+	}
 }
 
 LRESULT BrJComponent::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

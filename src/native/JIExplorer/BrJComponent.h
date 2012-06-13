@@ -52,6 +52,8 @@ public:
     static jclass    ms_jcidCursor;
     static jfieldID  ms_jcidCursor_pData;
 
+	static jmethodID ms_jcidWBrComponentPeer_callJava;
+
 
 public:
     static void initIDs(JNIEnv *env, jclass clazz);
@@ -80,6 +82,7 @@ public:
         LPTSTR lpName, 
         LPTSTR lpValue,
         _bstr_t &bsResult = _bstr_t());
+	virtual void CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult);
     virtual HRESULT BrJComponent::Connect(
         IN BSTR bsURL, 
         IN JNIEnv *env, 

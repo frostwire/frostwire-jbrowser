@@ -772,7 +772,7 @@ HRESULT CBrIELWControl::Invoke(
 		STRACE0(_T("DOCUMENT_COMPLETE"));
 		break;
 	case DISPID_JBROWSER_CALLJAVA:
-		STRACE0(_T("Called callJava"));
+		CallJava(pDispParams, pVarResult);
 		return S_OK;
     default:
         OLE_HR = DISP_E_MEMBERNOTFOUND;
@@ -907,6 +907,9 @@ void CBrIELWControl::AddCustomObject(IDispatch *custObj, BSTR name)
 	STRACE0(_T("Registered jbrowser object"));
 }
 
+void CBrIELWControl::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
+{
+}
 
 ////////////////////////
 // struct CDCHolder
