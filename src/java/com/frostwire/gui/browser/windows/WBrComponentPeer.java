@@ -530,10 +530,8 @@ public class WBrComponentPeer implements BrComponentPeer {
     public void onAddNotify() {
         if(0 == notifyCounter){
             if( !BrComponent.DESIGN_MODE ) {
-                if( NativeLoadMgr.loadLibrary("JIExplorer") ) {
-                    //init IDs for native callbacks on the first load
-                    initIDs();
-                }   
+                initIDs();
+                
                 for( Container c = target.getParent(); null != c; c = c.getParent() )
                 {
                     @SuppressWarnings("deprecation")

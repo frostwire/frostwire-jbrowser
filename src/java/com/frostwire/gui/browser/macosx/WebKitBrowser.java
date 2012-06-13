@@ -37,6 +37,7 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
         functions = new HashMap<String, BrowserFunction>();
     }
 
+    @Override
     public void setUrl(String url) {
         this.url = url;
         if (url != null)
@@ -67,11 +68,12 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     }
 
     public Dimension getMinimumSize() {
-        return new Dimension(160, 90);
+        return new Dimension(100, 100);
     }
 
+    @Override
     public Dimension getPreferredSize() {
-        return new Dimension(480, 270);
+        return new Dimension(270, 270);
     }
 
     public Component getComponent() {
@@ -171,4 +173,8 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     }
 
     private native long createNSView1();
+
+    @Override
+    public void refresh() {
+    }
 }

@@ -175,7 +175,7 @@ public class BrComponent
      * <code>null</code> the <code>stURL</code> propery contains an empty string 
      * <code>""</code>
      */
-    public void setURL(String _stURL) {
+    public void setUrl(String _stURL) {
         isHTMLSrc = null;
         stURL = (null==_stURL || 0==_stURL.length()) ? stAboutBlank : _stURL;
         if(isPeerReady()) {
@@ -192,7 +192,7 @@ public class BrComponent
      */
     public void setHTML(InputStream _isHTMLSrc, String _stURL) {
         if(null==_isHTMLSrc){
-            setURL(stAboutBlank);
+            setUrl(stAboutBlank);
             return;
         }
         isHTMLSrc = _isHTMLSrc;
@@ -227,7 +227,7 @@ public class BrComponent
      */
     public void setURL(URL url) throws FileNotFoundException {
         if(null==url){
-            setURL(stAboutBlank);
+            setUrl(stAboutBlank);
             return;
         }
         setHTML(new FileInputStream(url.toExternalForm()), url.toString());
@@ -353,7 +353,7 @@ public class BrComponent
     public BrComponent(String stURL) {
         super();
         init();
-        setURL(stURL);
+        setUrl(stURL);
     }
     
     /**
@@ -420,7 +420,7 @@ public class BrComponent
 
     public void open(String stHTMLPath)
     {
-        setURL(stHTMLPath);
+        setUrl(stHTMLPath);
     }
 
 
@@ -1079,6 +1079,11 @@ public class BrComponent
     public BrComponentPeer getBrPeer()
     {
         return brPeer;
+    }
+    
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(270, 270);
     }
 }
     
