@@ -185,7 +185,7 @@ namespace ZZ{
 
     memcpy(szBuffer1, szTime, iTimeLen*sizeof(TCHAR));
     _tcscat(szBuffer1, _T("\n"));
-    _ftprintf(stderr, szBuffer1 ); 
+    //_ftprintf(stderr, szBuffer1 ); 
   }
   inline void snTrace(LPCTSTR lpszFormat, ... ) 
   {
