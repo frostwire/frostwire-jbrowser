@@ -20,6 +20,11 @@ class IExplorer
 public:
     static jclass    ms_IExplorerComponent;
     
+	static jfieldID  ms_IExplorerComponent_x;
+    static jfieldID  ms_IExplorerComponent_y;
+	static jfieldID  ms_IExplorerComponent_width;
+    static jfieldID  ms_IExplorerComponent_height;
+
 	static jfieldID  ms_IExplorerComponent_data;
     static jmethodID ms_IExplorerComponent_callJava;
 

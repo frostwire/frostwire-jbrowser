@@ -3,6 +3,7 @@ package com.frostwire.gui.browser.windows;
 import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.peer.ComponentPeer;
 import java.io.InputStream;
@@ -126,6 +127,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     public native void setURL(String stURL, InputStream is);
 
     public native void resizeControl();
+    public native void nativeRepaint();
     
     public void setSize( int width, int height ) 
     {
@@ -153,5 +155,13 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
         super.setBounds(r);
         if(data!=0)
             resizeControl();
+    }
+    
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if (data != 0) {
+            nativeRepaint();
+        }
     }
 }

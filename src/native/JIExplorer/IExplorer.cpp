@@ -48,6 +48,11 @@ _COM_SMARTPTR_TYPEDEF(IActiveScriptParseProcedure, __uuidof(IActiveScriptParsePr
 
 jclass    IExplorer::ms_IExplorerComponent = NULL;
 
+jfieldID  IExplorer::ms_IExplorerComponent_x = NULL;
+jfieldID  IExplorer::ms_IExplorerComponent_y = NULL;
+jfieldID  IExplorer::ms_IExplorerComponent_width = NULL;
+jfieldID  IExplorer::ms_IExplorerComponent_height = NULL;
+
 jfieldID  IExplorer::ms_IExplorerComponent_data = NULL;
 jmethodID IExplorer::ms_IExplorerComponent_callJava = NULL;
 
@@ -57,6 +62,11 @@ void IExplorer::initIDs(JNIEnv *env, jclass clazz)
         env,
         "com/frostwire/gui/browser/windows/IExplorerComponent"
     );
+
+    ms_IExplorerComponent_x = env->GetFieldID(ms_IExplorerComponent, "x", "I");
+    ms_IExplorerComponent_y = env->GetFieldID(ms_IExplorerComponent, "y", "I");
+    ms_IExplorerComponent_width = env->GetFieldID(ms_IExplorerComponent, "width", "I");
+    ms_IExplorerComponent_height = env->GetFieldID(ms_IExplorerComponent, "height", "I");
     
 	ms_IExplorerComponent_data = env->GetFieldID(clazz, "data", "J");
     ms_IExplorerComponent_callJava = env->GetMethodID(
@@ -80,22 +90,19 @@ IExplorer::IExplorer(
  m_hChildArea(CreateRectRgn(0,0,0,0)),
  m_pThread(BrowserThread::GetInstance())
 {
-	STRACE0(L"IExplorer Created");
 }
 
 HRESULT IExplorer::getTargetRect(
     JNIEnv *env, 
     LPRECT prc)
 {
-    /*jobject target = env->GetObjectField(m_this, ms_jcidWBrComponentPeer_target);
-    if(NULL!=target){
-        prc->left = env->GetIntField(target, ms_jcidWBrComponent_x);
-        prc->top = env->GetIntField(target, ms_jcidWBrComponent_y);
-        prc->right = prc->left + env->GetIntField(target, ms_jcidWBrComponent_width);
-        prc->bottom = prc->top + env->GetIntField(target, ms_jcidWBrComponent_height);
-        env->DeleteLocalRef(target);
+    if(NULL!=m_this){
+        prc->left = env->GetIntField(m_this, ms_IExplorerComponent_x);
+        prc->top = env->GetIntField(m_this, ms_IExplorerComponent_y);
+        prc->right = prc->left + env->GetIntField(m_this, ms_IExplorerComponent_width);
+        prc->bottom = prc->top + env->GetIntField(m_this, ms_IExplorerComponent_height);
         return S_OK;
-    }*/
+    }
     return E_INVALIDARG;
 }
 
@@ -114,9 +121,9 @@ HRESULT IExplorer::create(
         GWL_STYLE, 
         GetWindowLong(hParent, GWL_STYLE) & ~(WS_CLIPCHILDREN | WS_CLIPSIBLINGS) );
 
-    //OLE_HRT( getTargetRect(
-    //    env, 
-    //    &rcIE))
+    OLE_HRT( getTargetRect(
+        env, 
+        &rcIE))
     OLE_HRT( CreateControl(
         hParent,
         &rcIE,
@@ -126,9 +133,8 @@ HRESULT IExplorer::create(
     if( GetTopWnd()==hFO || GetIEWnd()==hFO ){
         SetFocus(GetParent());
     }
-    //m_bTransparent = false;
-    //setTransparent(true);
-    OLE_CATCH
+    
+	OLE_CATCH
     OLE_RETURN_HR
 }
 
@@ -837,6 +843,24 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
 
 /*
  * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
+ * Method:    nativeRepaint
+ */
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_nativeRepaint(
+    JNIEnv *env, 
+    jobject self)
+{
+    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    if(pThis ){
+		RECT rc;
+		::GetWindowRect(pThis->GetParent(), &rc);
+		HWND hwndChild = GetWindow(pThis->GetParent(), GW_CHILD);
+       ::InvalidateRect(hwndChild, &rc, TRUE);
+	   ::UpdateWindow(hwndChild);
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
  * Method:    clearRgn
  */
 JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_resizeControl(
@@ -850,6 +874,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
 		::GetWindowRect(pThis->GetParent(),&rc);
 		HWND hwndChild = GetWindow(pThis->GetParent(), GW_CHILD);
         ::SetWindowPos(hwndChild,NULL,0,0,rc.right-rc.left,rc.bottom-rc.top,SWP_NOZORDER|SWP_NOACTIVATE|SWP_SHOWWINDOW|SWP_NOMOVE);
+		::InvalidateRect(pThis->GetTopWnd(), &rc, FALSE);
     }
 }
 
