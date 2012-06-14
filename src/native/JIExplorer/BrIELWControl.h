@@ -119,6 +119,7 @@ public:
     HWND GetIEWnd() { return m_hwndIE; }
     HWND GetTopWnd() { return m_hwndShell; }
     HWND GetParent() { return m_hwndParent; }
+	LONG_PTR GetOldIEWndProc() { return m_pOldIEWndProc; };
 
 private:
     volatile LONG m_cRef;

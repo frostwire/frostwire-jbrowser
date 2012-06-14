@@ -69,6 +69,7 @@ public class BrowserFrame extends javax.swing.JFrame {
     private JProgressBar pbDownloadDoc;
     private JMenu toolsJMenu;
     private JMenuItem menuRunJS;
+    private JMenuItem menuRunJS2;
 
     private WebBrowser browser;
 
@@ -248,9 +249,19 @@ public class BrowserFrame extends javax.swing.JFrame {
                 menuRunJS_actionPerformed(e);
             }
         });
+        
+        menuRunJS2 = new JMenuItem();
+        menuRunJS2.setText("Run JS 2");
+        menuRunJS2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                menuRunJS_actionPerformed(e);
+            }
+        });
 
         toolsJMenu.setText("Tools");
         toolsJMenu.add(menuRunJS);
+        toolsJMenu.add(menuRunJS2);
 
         mainJMenuBar.add(toolsJMenu);
 

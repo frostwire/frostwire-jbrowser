@@ -216,6 +216,8 @@ void IExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
 
 LRESULT IExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	return ::CallWindowProc((WNDPROC)GetOldIEWndProc(), hWnd, msg, wParam, lParam);
+
     LRESULT lRes = 0;
     switch(msg){
     case WM_SETFOCUS:
