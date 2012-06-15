@@ -1,4 +1,4 @@
-package com.frostwire.gui.browser;
+package com.frostwire.gui.webbrowser;
 
 import java.awt.Component;
 

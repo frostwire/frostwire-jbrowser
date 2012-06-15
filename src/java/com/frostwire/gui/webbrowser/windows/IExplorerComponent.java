@@ -19,8 +19,8 @@ import javax.swing.SwingUtilities;
 
 import sun.awt.windows.WComponentPeer;
 
-import com.frostwire.gui.browser.BrowserFunction;
-import com.frostwire.gui.browser.WebBrowser;
+import com.frostwire.gui.webbrowser.BrowserFunction;
+import com.frostwire.gui.webbrowser.WebBrowser;
 
 public class IExplorerComponent extends Canvas implements WebBrowser {
 

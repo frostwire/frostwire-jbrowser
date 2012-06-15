@@ -2,8 +2,8 @@ package com.frostwire.gui.webbrowser.windows;
 
 import java.awt.Component;
 
-import com.frostwire.gui.browser.BrowserFunction;
-import com.frostwire.gui.browser.WebBrowser;
+import com.frostwire.gui.webbrowser.BrowserFunction;
+import com.frostwire.gui.webbrowser.WebBrowser;
 
 public class InternetExplorerBrowser extends BrComponent implements WebBrowser, BrComponentListener {
 

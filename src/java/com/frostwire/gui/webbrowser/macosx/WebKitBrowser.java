@@ -1,4 +1,4 @@
-package com.frostwire.gui.browser.macosx;
+package com.frostwire.gui.webbrowser.macosx;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.apple.eawt.CocoaComponent;
-import com.frostwire.gui.browser.BrowserFunction;
-import com.frostwire.gui.browser.WebBrowser;
+import com.frostwire.gui.webbrowser.BrowserFunction;
+import com.frostwire.gui.webbrowser.WebBrowser;
 
 public class WebKitBrowser extends CocoaComponent implements WebBrowser {
 

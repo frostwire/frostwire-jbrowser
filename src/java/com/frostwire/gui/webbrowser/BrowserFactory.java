@@ -1,8 +1,8 @@
-package com.frostwire.gui.browser;
+package com.frostwire.gui.webbrowser;
 
 import java.awt.Toolkit;
 
-import com.frostwire.gui.browser.macosx.WebKitBrowser;
+import com.frostwire.gui.webbrowser.macosx.WebKitBrowser;
 import com.frostwire.gui.webbrowser.windows.IExplorerComponent;
 import com.frostwire.gui.webbrowser.windows.InternetExplorerBrowser;
 

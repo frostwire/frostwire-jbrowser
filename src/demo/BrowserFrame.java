@@ -42,8 +42,8 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import com.frostwire.gui.browser.BrowserFactory;
-import com.frostwire.gui.browser.WebBrowser;
+import com.frostwire.gui.webbrowser.BrowserFactory;
+import com.frostwire.gui.webbrowser.WebBrowser;
 
 /**
  * Sample browser implementation.
