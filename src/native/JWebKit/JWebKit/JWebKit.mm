@@ -414,7 +414,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
 }
 
-JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_macosx_WebKitBrowser_createNSView1
+JNIEXPORT jlong JNICALL Java_com_frostwire_gui_webbrowser_WebKitComponent_createNSView1
 (JNIEnv *env, jobject obj) {
     JWebKit* view = nil;
     NS_DURING;
