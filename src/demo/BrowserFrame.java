@@ -125,7 +125,7 @@ public class BrowserFrame extends javax.swing.JFrame {
 
         bnRefresh.getAccessibleContext().setAccessibleName("bnRefresh");
 
-        //browser.setUrl("http://www.google.com");
+        //browser.go("http://www.google.com");
 
         jPanel1.add(browser.getComponent(), BorderLayout.CENTER);
 
@@ -277,8 +277,8 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     protected void menuRunJS_actionPerformed(ActionEvent e) {
-        //brMain.runJS("alert('test alert');");
-        browser.runJS("alert(window.jbrowser.callJava('functionName', 'functionData'));");
+        browser.runJS("alert('test alert');");
+        //browser.runJS("alert(window.jbrowser.callJava('functionName', 'functionData'));");
     }
 
     private void edStatusTextActionPerformed(ActionEvent evt) {

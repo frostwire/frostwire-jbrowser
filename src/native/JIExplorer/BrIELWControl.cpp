@@ -714,7 +714,7 @@ HRESULT CBrIELWControl::Invoke(
     switch(dispIdMember){
     case DISPID_HTMLWINDOWEVENTS_ONERROR:
         //STRACE0(_T("DISPID_NAVIGATECOMPLETE2"));
-        ::MessageBoxA(NULL, "Error", "Error", MB_OK);
+        //::MessageBoxA(NULL, "Error", "Error", MB_OK);
         break;
     case DISPID_NAVIGATECOMPLETE2:
         STRACE0(_T("DISPID_NAVIGATECOMPLETE2"));
@@ -830,23 +830,22 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowMessage(HWND hwnd,
 	// S_OK: Host displayed its UI. MSHTML does not display its message box.
 	// S_FALSE: Host did not display its UI. MSHTML displays its message box.
 
-	*plResult = IDCANCEL;
-
-	return S_OK;
+	//*plResult = IDCANCEL;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowHelp(HWND hwnd,
 	LPOLESTR pszHelpFile, UINT uCommand, DWORD dwData, POINT ptMouse,
 	IDispatch *pDispatchObjectHit)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 // IDocHostUIHandler
 HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowContextMenu(DWORD dwID,
 	POINT *ppt, IUnknown *pcmdtReserved, IDispatch *pdispReserved)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::GetHostInfo(DOCHOSTUIINFO *pInfo)
@@ -862,67 +861,66 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::GetHostInfo(DOCHOSTUIINFO *pInfo)
 	// on the DOCHOSTUIINFO struct passed to us.
 
 	//pInfo->dwFlags = (hasScrollbars ? 0 : DOCHOSTUIFLAG_SCROLL_NO) | DOCHOSTUIFLAG_NO3DOUTERBORDER;
-	pInfo->dwFlags = DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DISABLE_HELP_MENU |
-		DOCHOSTUIFLAG_DISABLE_SCRIPT_INACTIVE;
+	pInfo->dwFlags = DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DISABLE_HELP_MENU;
 
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowUI(DWORD dwID,
 	IOleInPlaceActiveObject *pActiveObject, IOleCommandTarget *pCommandTarget,
 	IOleInPlaceFrame *pFrame, IOleInPlaceUIWindow *pDoc)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::HideUI()
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::UpdateUI()
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::EnableModeless(BOOL fEnable)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::OnDocWindowActivate(BOOL fActivate)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::OnFrameWindowActivate(
 	BOOL fActivate)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::ResizeBorder(LPCRECT prcBorder,
 	IOleInPlaceUIWindow *pUIWindow, BOOL fRameWindow)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::TranslateAccelerator(LPMSG lpMsg,
 	const GUID *pguidCmdGroup, DWORD nCmdID)
 {
-	return S_FALSE;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::GetOptionKeyPath(LPOLESTR *pchKey,
 	DWORD dw)
 {
-	return S_FALSE;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::GetDropTarget(
 	IDropTarget *pDropTarget, IDropTarget **ppDropTarget)
 {
-	return S_FALSE;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::GetExternal(IDispatch **ppDispatch)
@@ -942,7 +940,7 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::TranslateUrl(DWORD dwTranslate,
 {
 	*ppchURLOut = 0;
 
-	return S_FALSE;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::FilterDataObject(IDataObject *pDO,
@@ -950,7 +948,7 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::FilterDataObject(IDataObject *pDO,
 {
 	*ppDORet = 0;
 
-	return S_FALSE;
+	return E_NOTIMPL;
 }
 
 // IOleInPlaceUIWindow
@@ -974,7 +972,7 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::SetBorderSpace(
 HRESULT STDMETHODCALLTYPE CBrIELWControl::SetActiveObject(
 	IOleInPlaceActiveObject *pActiveObject, LPCOLESTR pszObjName)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 // IOleInPlaceFrame
@@ -987,7 +985,7 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::InsertMenus(HMENU hmenuShared,
 HRESULT STDMETHODCALLTYPE CBrIELWControl::SetMenu(HMENU hmenuShared,
 	HOLEMENU holemenu, HWND hwndActiveObject)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::RemoveMenus(HMENU hmenuShared)
@@ -998,7 +996,7 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::RemoveMenus(HMENU hmenuShared)
 HRESULT STDMETHODCALLTYPE CBrIELWControl::SetStatusText(
 	LPCOLESTR pszStatusText)
 {
-	return S_OK;
+	return E_NOTIMPL;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::TranslateAccelerator(LPMSG lpmsg,

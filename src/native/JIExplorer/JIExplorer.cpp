@@ -614,6 +614,38 @@ void JIExplorer::Refresh(BOOL bClearCache)
 	OLE_CATCH
 }
 
+void JIExplorer::Stop()
+{
+	OLE_TRY
+	IWebBrowser2Ptr br(m_spIWebBrowser2);
+	OLE_CHECK_NOTNULLSP(br)
+	OLE_HRT(br->Stop());
+	OLE_CATCH
+}
+
+void JIExplorer::RunJS(IN BSTR bsCode)
+{
+	OLE_TRY
+	IWebBrowser2Ptr br(m_spIWebBrowser2);
+	OLE_CHECK_NOTNULLSP(br)
+	IHTMLDocument2 *doc = GetDoc();
+	if (doc != NULL) {
+		IHTMLWindow2 *win = NULL;
+		doc->get_parentWindow(&win);
+		
+		if (win != NULL) {
+			_variant_t vtResult;
+			OLE_HRT( win->execScript(bsCode, _B(""), &vtResult ));
+
+			vtResult.Clear();
+			win->Release();
+		}
+
+		doc->Release();
+	}
+	OLE_CATCH
+}
+
 /************************************************************************
  * IExplorerComponent native methods
  */
@@ -1198,6 +1230,81 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
                 pThis,
                 env,
                 jsURL));
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    nativeStop
+ */
+struct StopAction : public BrowserAction
+{
+    JIExplorer *m_pThis;
+
+    StopAction(
+        JIExplorer *pThis
+    ):m_pThis(pThis)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        OLE_TRY
+        OLE_HRT( m_pThis->m_spIWebBrowser2->Stop() );
+        OLE_CATCH
+        OLE_RETURN_HR
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeStop(
+    JNIEnv *env, 
+    jobject self)
+{
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        pThis->GetThread()->MakeAction(
+            env,
+            "Stop error",
+            StopAction(
+                pThis));
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    nativeRunJS
+ * Signature: (Ljava/lang/String;)V
+ */
+struct RunJSAction : public BrowserAction{
+    JStringBuffer m_jstCode;
+    JIExplorer *m_pThis;
+
+    RunJSAction(
+        JIExplorer *pThis,
+        JNIEnv *env,
+        jstring jCode
+    ):m_pThis(pThis),
+      m_jstCode(env, jCode)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        m_pThis->RunJS(_B(m_jstCode));
+		return S_OK; 
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeRunJS(
+    JNIEnv *env, 
+    jobject self,
+    jstring jsCode)
+{
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        pThis->GetThread()->MakeAction(
+            env,
+            "RunJS error",
+            RunJSAction(
+                pThis,
+                env,
+                jsCode));
     }
 }
 

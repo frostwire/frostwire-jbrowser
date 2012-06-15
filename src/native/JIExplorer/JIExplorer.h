@@ -106,6 +106,8 @@ public:
 	void GoBack();
 	void GoForward();
 	void Refresh(BOOL bClearCache);
+	void Stop();
+	void RunJS(IN BSTR bsCode);
 };
 
 #endif /* IEXPLORER_H */

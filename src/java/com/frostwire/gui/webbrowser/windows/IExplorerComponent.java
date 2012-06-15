@@ -48,7 +48,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     public void addNotify() {
         super.addNotify();
         onAddNotify();
-        if (url != null) {
+        if (url != null && data != 0) {
             nativeGo(url);
         }
     }
@@ -107,7 +107,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     @Override
     public void go(String url) {
         this.url = url;
-        if (url != null)
+        if (url != null && data != 0)
             nativeGo(url);
         else {
             nativeGo("about:blank");
@@ -116,29 +116,37 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
 
     @Override
     public void back() {
+        if (data != 0) {
         nativeBack();
+        }
     }
     
     @Override
     public void forward() {
+        if (data != 0) {
         nativeForward();
+        }
     }
 
     @Override
     public void reload() {
+        if (data != 0) {
         nativeReload();
+        }
     }
 
     @Override
     public void stop() {
-        // TODO Auto-generated method stub
-        
+        if (data != 0) {
+        nativeStop();
+        }
     }
 
     @Override
     public void runJS(String code) {
-        // TODO Auto-generated method stub
-        
+        if (data != 0) {
+        nativeRunJS(code);
+        }
     }
 
     @Override
@@ -152,13 +160,14 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     public native void destroy();
     
     
-    public native void refresh(boolean clearCache);
     native public void nativeSetEnabled(boolean enabled);
     native public void nativeSetVisible(boolean aFlag);
     public native void nativeGo(String url);
     public native void nativeBack();
     public native void nativeForward();
     public native void nativeReload();
+    public native void nativeStop();
+    public native void nativeRunJS(String code);
 
     public native void nativeSetBounds();
     
