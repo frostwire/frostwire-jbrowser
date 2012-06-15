@@ -384,7 +384,7 @@ public class BrComponent
     {
         execJSLater(":window.history.forward()");
     }
-    public void refresh()
+    public void refreshContent()
     {
         execJSLater(":window.history.go(0)");
     }

@@ -1,15 +1,20 @@
 package com.frostwire.gui.browser.windows;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Graphics;
 import java.awt.KeyboardFocusManager;
-import java.awt.Rectangle;
+import java.awt.Point;
 import java.awt.peer.ComponentPeer;
 import java.io.InputStream;
 
 import javax.swing.FocusManager;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import sun.awt.windows.WComponentPeer;
@@ -25,6 +30,10 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     
     protected int notifyCounter = 0;    
     protected boolean showOnZero = true;
+    
+   public IExplorerComponent() {
+        setMinimumSize(new Dimension(10, 10));
+    }
     
     /**
      * Makes this Component displayable by connecting it to a
@@ -59,12 +68,18 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
         if(0 == notifyCounter){
                 initIDs();
                 
+                for( Container c = getParent(); null != c; c = c.getParent() )
+                {
                     @SuppressWarnings("deprecation")
                     ComponentPeer cp = getPeer();
                     if( (cp instanceof WComponentPeer) ){
-                        long hWnd = ((WComponentPeer)cp).getHWnd();
-                        data = create( hWnd, 4);
+                        //parentHW = c;
+                        data = create( ((WComponentPeer)cp).getHWnd(), 4);
+                        //acceptTargetURL();
+                        //setEditable(target.isEditable());
+                        break;
                     }
+                }
         }
         ++notifyCounter;
     }
@@ -102,7 +117,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     }
 
     @Override
-    public void refresh() {
+    public void refreshContent() {
         // TODO Auto-generated method stub
         
     }
@@ -133,35 +148,35 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     public native void resizeControl();
     public native void nativePaint();
     
-    public void setSize( int width, int height ) 
-    {
-        super.setSize(width,height);
-        if(data!=0)
-            resizeControl();
-    }
-
-    public void setSize( Dimension d ) 
-    {
-        super.setSize(d);
-        if(data!=0)
-            resizeControl();
-    }
-
+    
+    @Override
     public void setBounds( int x, int y, int width, int height ) 
     {
         super.setBounds(x,y,width,height);
-        if(data!=0)
+        
+        if(data!=0) {
+//            Point pt = new Point(x, y);
+//            SwingUtilities.convertPointToScreen(pt, this);
+//            nativePosOnScreen(
+//                    pt.x,
+//                    pt.y,
+//                    width,
+//                    height);
+           //nativePaint();
             resizeControl();
-    }
-
-    public void setBounds( Rectangle r ) 
-    {
-        super.setBounds(r);
-        if(data!=0)
-            resizeControl();
+            //nativePaint();
+        }
     }
     
     boolean isFocusOwner = false;
+    
+    @Override
+    public void validate() {
+        super.validate();
+        if(data != 0) {
+            //clearRgn();
+        }
+    }
     
     @Override
     public boolean hasFocus() {
@@ -205,6 +220,11 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
         return processBrComponentEvent(
                 new BrComponentEvent(this, iId, stName, stValue));
     }
+    
+    public native void clearRgn();
+    public native void clipChild(int top, int left, int width, int height);
+    public native String execJS(String code);
+    public native void nativePosOnScreen(int x, int y, int width, int height);
     
     private void focusMove(final boolean bNext)
     {
@@ -282,9 +302,21 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     
     @Override
     public void paint(Graphics g) {
-        super.paint(g);
+        //super.paint(g);
+        //System.out.println("paint");
         if (data != 0) {
-            nativePaint();
+            //nativePaint();
+           //resizeControl();
         }
     }
+    
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (data != 0) {
+            //resizeControl();
+            //nativePaint();
+        }
+    }
+    
 }

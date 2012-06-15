@@ -86,7 +86,6 @@ private:
     virtual void RedrawParentRect(LPRECT pRect);
     virtual LRESULT NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-
 private:
     RECT    m_rcInvalid;
     DWORD   m_dwKey;

@@ -266,7 +266,7 @@ void IExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
 LRESULT IExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = 0;
-	
+
 	LONG_PTR pHook = NULL;
     if(WM_NCDESTROY==msg){
         RemoveHook(hWnd);
@@ -317,7 +317,8 @@ LRESULT IExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_MOUSEACTIVATE:
 
-    case WM_MOUSEMOVE: 
+    case WM_MOUSEMOVE:
+
     case WM_NCLBUTTONDBLCLK:
     case WM_NCLBUTTONDOWN:
     case WM_NCLBUTTONUP:
@@ -529,10 +530,10 @@ JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponen
  * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
  * Method:    destroy
   */
-struct DestroyAction : public BrowserAction
+struct DestroyAction2 : public BrowserAction
 {
     IExplorer *m_pThis;
-    DestroyAction(IExplorer *pThis)
+    DestroyAction2(IExplorer *pThis)
     : m_pThis(pThis)
     {}
 
@@ -550,7 +551,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
         pThis->GetThread()->MakeAction(
             env,
             "Browser destroy error",
-            DestroyAction(pThis));
+            DestroyAction2(pThis));
         delete pThis;
         env->SetLongField(self, IExplorer::ms_IExplorerComponent_data, 0L);
     }
@@ -560,13 +561,13 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
  * Class:     sun.awt.windows.WBrComponentPeer
  * Method:    execJS
  */
-struct ExecJSAction : public BrowserAction
+struct ExecJSAction2 : public BrowserAction
 {
     IExplorer *m_pThis;
     JStringBuffer m_jstCode;
     _bstr_t m_bsResult;
 
-    ExecJSAction(
+    ExecJSAction2(
         IExplorer *pThis,
         JNIEnv *env,
         jstring jsCode
@@ -707,7 +708,7 @@ JNIEXPORT jstring JNICALL Java_com_frostwire_gui_browser_windows_IExplorerCompon
     IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
     if(pThis){
         OLE_TRY
-        ExecJSAction a(
+        ExecJSAction2 a(
             pThis,
             env,
             jsCode);
@@ -777,12 +778,12 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
  * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    setVisible
  */
-struct ShowAction : public BrowserAction
+struct ShowAction2 : public BrowserAction
 {
     IExplorer *m_pThis;
     BOOL bShow;
 
-    ShowAction(
+    ShowAction2(
         IExplorer *pThis,
         BOOL _bShow
     ):m_pThis(pThis),
@@ -805,7 +806,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
         pThis->GetThread()->MakeAction(
             env,
             "ShowWindow error",
-            ShowAction(
+            ShowAction2(
                 pThis,
                 aFlag));
     }
@@ -815,12 +816,12 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
  * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
  * Method:    setEnabled
  */
-struct EnableAction : public BrowserAction
+struct EnableAction2 : public BrowserAction
 {
     IExplorer *m_pThis;
     BOOL bEnable;
 
-    EnableAction(
+    EnableAction2(
         IExplorer *pThis,
         BOOL _bEnable
     ):m_pThis(pThis),
@@ -843,9 +844,82 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
         pThis->GetThread()->MakeAction(
             env,
             "EnableWindow error",
-            EnableAction(
+            EnableAction2(
                 pThis,
                 enabled));
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
+ * Method:    nativePosOnScreen
+ */
+struct ReshapeAction2 : public BrowserAction
+{
+    IExplorer *m_pThis;
+    jint x, y, w, h;
+
+    ReshapeAction2(
+        IExplorer *pThis,
+        jint _x, jint _y, jint _w, jint _h
+    ):m_pThis(pThis),
+      x(_x), y(_y), w(_w), h(_h)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        MoveWindow(m_pThis->GetTopWnd(), x, y, w, h, TRUE);
+        return S_OK; 
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_nativePosOnScreen(
+    JNIEnv *env, 
+    jobject self,
+    jint x, jint y, jint w, jint h)
+{
+    SEP0(_T("nativePosOnScreen"))
+    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        STRACE0(_T("nativePosOnScreen x:%d y:%d w:%d h:%d"), x, y, w, h);
+        POINT pt = {x, y};
+        MapWindowPoints(
+            NULL,
+            pThis->GetParent(),
+            &pt,
+            1);
+        if( -1==w || -1==h){
+            RECT rc;
+            GetWindowRect(pThis->GetTopWnd(), &rc);
+            if( -1==w ){
+                w = rc.right - rc.left;
+            }    
+            if( -1==h ){
+                h = rc.bottom - rc.top;
+            }
+        }
+        pThis->GetThread()->MakeAction(
+            env,
+            "Reshape error",
+            ReshapeAction2(
+                        pThis,
+                        pt.x, pt.y, w, h)
+        );
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
+ * Method:    clearRgn
+ */
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_clearRgn(
+    JNIEnv *env, 
+    jobject self)
+{
+    SEP0(_T("clearRgn"))
+    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    if(pThis && pThis->m_hChildArea){
+        DeleteObject((HGDIOBJ)pThis->m_hChildArea);
+        pThis->m_hChildArea = CreateRectRgn(0,0,0,0);
     }
 }
 
@@ -887,7 +961,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
 		RECT rc;
 		::GetWindowRect(pThis->GetParent(), &rc);
 		HWND hwndChild = GetWindow(pThis->GetParent(), GW_CHILD);
-       ::InvalidateRect(hwndChild, &rc, TRUE);
+       ::InvalidateRect(hwndChild, &rc, FALSE);
 	   ::UpdateWindow(hwndChild);
     }
 }
@@ -906,8 +980,9 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
 		RECT rc;
 		::GetWindowRect(pThis->GetParent(),&rc);
 		HWND hwndChild = GetWindow(pThis->GetParent(), GW_CHILD);
-        ::SetWindowPos(hwndChild,NULL,0,0,rc.right-rc.left,rc.bottom-rc.top,SWP_NOZORDER|SWP_NOACTIVATE|SWP_SHOWWINDOW|SWP_NOMOVE);
-		::InvalidateRect(pThis->GetTopWnd(), &rc, FALSE);
+        ::SetWindowPos(hwndChild,NULL,0,0,rc.right-rc.left,rc.bottom-rc.top,SWP_NOZORDER|SWP_NOACTIVATE|SWP_SHOWWINDOW|SWP_NOMOVE | SWP_NOCOPYBITS);
+		::InvalidateRect(hwndChild, &rc, FALSE);
+	   ::UpdateWindow(hwndChild);
     }
 }
 

@@ -33,6 +33,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
@@ -300,7 +301,7 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     private void bnReloadActionPerformed(ActionEvent evt) {
-        browser.refresh();
+        browser.refreshContent();
     }
 
     private void bnStopActionPerformed(ActionEvent evt) {
@@ -312,9 +313,12 @@ public class BrowserFrame extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+        JPopupMenu.setDefaultLightWeightPopupEnabled
+        (false);
 
         System.setProperty("com.apple.eawt.CocoaComponent.CompatibilityMode", "false");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
+        System.setProperty("sun.awt.noerasebackground", "true");
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

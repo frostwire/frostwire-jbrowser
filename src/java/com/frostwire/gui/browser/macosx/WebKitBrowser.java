@@ -161,6 +161,6 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     private native long createNSView1();
 
     @Override
-    public void refresh() {
+    public void refreshContent() {
     }
 }
