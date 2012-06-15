@@ -839,6 +839,7 @@ HRESULT CBrIELWControl::Invoke(
     OLE_RETURN_HR
 }
 
+// IDocHostShowUI
 HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowMessage(HWND hwnd,
 	LPOLESTR lpstrText, LPOLESTR lpstrCaption, DWORD dwType,
 	LPOLESTR lpstrHelpFile, DWORD dwHelpContext, LRESULT *plResult)
@@ -858,6 +859,113 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowHelp(HWND hwnd,
 	IDispatch *pDispatchObjectHit)
 {
 	return S_OK;
+}
+
+// IDocHostUIHandler
+HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowContextMenu(DWORD dwID,
+	POINT *ppt, IUnknown *pcmdtReserved, IDispatch *pdispReserved)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::GetHostInfo(DOCHOSTUIINFO *pInfo)
+{
+	// Called at initialization of the browser object UI. We can set various
+	// features of the browser object here.
+	// We can do disable the 3D border (DOCHOSTUIFLAG_NO3DOUTERBORDER) and
+	// other things like hide the scroll bar (DOCHOSTUIFLAG_SCROLL_NO), display
+	// picture display (DOCHOSTUIFLAG_NOPICS), disable any script running when
+	// the page is loaded (DOCHOSTUIFLAG_DISABLE_SCRIPT_INACTIVE), open a site
+	// in a new browser window when the user clicks on some link
+	// (DOCHOSTUIFLAG_OPENNEWWIN), and lots of other things. See the MSDN docs
+	// on the DOCHOSTUIINFO struct passed to us.
+
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowUI(DWORD dwID,
+	IOleInPlaceActiveObject *pActiveObject, IOleCommandTarget *pCommandTarget,
+	IOleInPlaceFrame *pFrame, IOleInPlaceUIWindow *pDoc)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::HideUI()
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::UpdateUI()
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::EnableModeless(BOOL fEnable)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::OnDocWindowActivate(BOOL fActivate)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::OnFrameWindowActivate(
+	BOOL fActivate)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::ResizeBorder(LPCRECT prcBorder,
+	IOleInPlaceUIWindow *pUIWindow, BOOL fRameWindow)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::TranslateAccelerator(LPMSG lpMsg,
+	const GUID *pguidCmdGroup, DWORD nCmdID)
+{
+	return S_FALSE;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::GetOptionKeyPath(LPOLESTR *pchKey,
+	DWORD dw)
+{
+	return S_FALSE;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::GetDropTarget(
+	IDropTarget *pDropTarget, IDropTarget **ppDropTarget)
+{
+	return S_FALSE;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::GetExternal(IDispatch **ppDispatch)
+{
+	// Gets the host's IDispatch interface.
+	// If the host exposes an automation interface, it can provide a reference
+	// to MSHTML through ppDispatch.
+	// If the method implementation does not supply an IDispatch, set
+	// ppDispatch to NULL, even if the method fails or returns S_FALSE.
+
+	*ppDispatch = NULL;
+	return S_FALSE;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::TranslateUrl(DWORD dwTranslate,
+	OLECHAR *pchURLIn, OLECHAR **ppchURLOut)
+{
+	*ppchURLOut = 0;
+
+	return S_FALSE;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::FilterDataObject(IDataObject *pDO,
+	IDataObject **ppDORet)
+{
+	*ppDORet = 0;
+
+	return S_FALSE;
 }
 
 IHTMLDocument2 *CBrIELWControl::GetDoc()

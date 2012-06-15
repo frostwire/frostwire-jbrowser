@@ -95,7 +95,8 @@ class CBrIELWControl :
     public IOleInPlaceSite,
     public IAdviseSink,
     public DWebBrowserEvents2,
-	public IDocHostShowUI
+	public IDocHostShowUI,
+	public IDocHostUIHandler
 {
 private:
 	static const DISPID DISPID_JBROWSER_CALLJAVA = DISPID_VALUE + 1;
@@ -188,7 +189,15 @@ public:
            *ppvObject = (IAdviseSink *)this;
         } else if(IsEqualGUID(riid, IID_IDispatch)){
            *ppvObject = (IDispatch *)this;
-        } else
+		} else if (riid == IID_IOleInPlaceUIWindow) {
+			*ppvObject = (IOleInPlaceUIWindow*)(this);
+		} else if (riid == IID_IOleInPlaceFrame) {
+			*ppvObject = (IOleInPlaceFrame*) (this);
+		} else if (riid == IID_IDocHostUIHandler) {
+			*ppvObject = (IDocHostUIHandler*) (this);
+		} else if (riid == IID_IDocHostShowUI) {
+			*ppvObject = (IDocHostShowUI*) (this);
+		} else
             return E_NOTIMPL;
             //DWebBrowserEvents2 with 34A715A0-6587-11D0-924A-0020AFC7AC4D
             //can be implemented
@@ -370,6 +379,33 @@ private:
 	virtual HRESULT STDMETHODCALLTYPE ShowHelp(HWND hwnd, LPOLESTR pszHelpFile,
 		UINT uCommand, DWORD dwData, POINT ptMouse,
 		IDispatch *pDispatchObjectHit);
+
+	// IDocHostUIHandler
+	virtual HRESULT STDMETHODCALLTYPE ShowContextMenu(DWORD dwID, POINT *ppt,
+		IUnknown *pcmdtReserved, IDispatch *pdispReserved);
+	virtual HRESULT STDMETHODCALLTYPE GetHostInfo(DOCHOSTUIINFO *pInfo);
+	virtual HRESULT STDMETHODCALLTYPE ShowUI(DWORD dwID,
+		IOleInPlaceActiveObject *pActiveObject,
+		IOleCommandTarget *pCommandTarget, IOleInPlaceFrame *pFrame,
+		IOleInPlaceUIWindow *pDoc);
+	virtual HRESULT STDMETHODCALLTYPE HideUI();
+	virtual HRESULT STDMETHODCALLTYPE UpdateUI();
+	virtual HRESULT STDMETHODCALLTYPE EnableModeless(BOOL fEnable);
+	virtual HRESULT STDMETHODCALLTYPE OnDocWindowActivate(BOOL fActivate);
+	virtual HRESULT STDMETHODCALLTYPE OnFrameWindowActivate(BOOL fActivate);
+	virtual HRESULT STDMETHODCALLTYPE ResizeBorder(LPCRECT prcBorder,
+		IOleInPlaceUIWindow *pUIWindow, BOOL fRameWindow);
+	virtual HRESULT STDMETHODCALLTYPE TranslateAccelerator(LPMSG lpMsg,
+		const GUID *pguidCmdGroup, DWORD nCmdID);
+	virtual HRESULT STDMETHODCALLTYPE GetOptionKeyPath(LPOLESTR *pchKey,
+		DWORD dw);
+	virtual HRESULT STDMETHODCALLTYPE GetDropTarget(IDropTarget *pDropTarget,
+		IDropTarget **ppDropTarget);
+	virtual HRESULT STDMETHODCALLTYPE GetExternal(IDispatch **ppDispatch);
+	virtual HRESULT STDMETHODCALLTYPE TranslateUrl(DWORD dwTranslate,
+		OLECHAR *pchURLIn, OLECHAR **ppchURLOut);
+	virtual HRESULT STDMETHODCALLTYPE FilterDataObject(IDataObject *pDO,
+		IDataObject **ppDORet);
 
 private:
 
