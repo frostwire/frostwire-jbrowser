@@ -16,6 +16,9 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 // USA.
+
+// FrostWire
+// extended
 #ifndef _BrIELWControl_H_
 #define _BrIELWControl_H_
 
@@ -23,6 +26,7 @@
 #include <comutil.h>
 #include <oledlg.h>
 #include <mshtml.h>
+#include <mshtmhst.h>
 #include <mshtmdid.h>
 #include <exdisp.h>
 #include <exdispid.h>
@@ -90,7 +94,8 @@ class CBrIELWControl :
     public IOleClientSite,
     public IOleInPlaceSite,
     public IAdviseSink,
-    public DWebBrowserEvents2
+    public DWebBrowserEvents2,
+	public IDocHostShowUI
 {
 private:
 	static const DISPID DISPID_JBROWSER_CALLJAVA = DISPID_VALUE + 1;
@@ -356,6 +361,15 @@ private:
             EXCEPINFO  *pExcepInfo,
             UINT  *puArgErr
     );
+
+	// IDocHostShowUI
+	virtual HRESULT STDMETHODCALLTYPE ShowMessage(HWND hwnd,
+		LPOLESTR lpstrText, LPOLESTR lpstrCaption, DWORD dwType,
+		LPOLESTR lpstrHelpFile, DWORD dwHelpContext, LRESULT *plResult);
+
+	virtual HRESULT STDMETHODCALLTYPE ShowHelp(HWND hwnd, LPOLESTR pszHelpFile,
+		UINT uCommand, DWORD dwData, POINT ptMouse,
+		IDispatch *pDispatchObjectHit);
 
 private:
 

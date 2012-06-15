@@ -18,7 +18,7 @@
 // USA.
 
 // FrostWire
-// modified to support javascript->Java interaction
+// extended
 #include "stdafx.h" 
 #include <vector>
 #include "BrIELWControl.h"       // main symbols
@@ -837,6 +837,27 @@ HRESULT CBrIELWControl::Invoke(
     }
     OLE_CATCH
     OLE_RETURN_HR
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowMessage(HWND hwnd,
+	LPOLESTR lpstrText, LPOLESTR lpstrCaption, DWORD dwType,
+	LPOLESTR lpstrHelpFile, DWORD dwHelpContext, LRESULT *plResult)
+{
+	// Called by MSHTML to display a message box.
+	// It is used for Microsoft JScript alerts among other things
+	// S_OK: Host displayed its UI. MSHTML does not display its message box.
+	// S_FALSE: Host did not display its UI. MSHTML displays its message box.
+
+	*plResult = IDCANCEL;
+
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowHelp(HWND hwnd,
+	LPOLESTR pszHelpFile, UINT uCommand, DWORD dwData, POINT ptMouse,
+	IDispatch *pDispatchObjectHit)
+{
+	return S_OK;
 }
 
 IHTMLDocument2 *CBrIELWControl::GetDoc()
