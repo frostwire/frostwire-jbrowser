@@ -96,7 +96,8 @@ class CBrIELWControl :
     public IAdviseSink,
     public DWebBrowserEvents2,
 	public IDocHostShowUI,
-	public IDocHostUIHandler
+	public IDocHostUIHandler,
+	public IOleInPlaceFrame
 {
 private:
 	static const DISPID DISPID_JBROWSER_CALLJAVA = DISPID_VALUE + 1;
@@ -406,6 +407,25 @@ private:
 		OLECHAR *pchURLIn, OLECHAR **ppchURLOut);
 	virtual HRESULT STDMETHODCALLTYPE FilterDataObject(IDataObject *pDO,
 		IDataObject **ppDORet);
+
+	// IOleInPlaceUIWindow
+	virtual HRESULT STDMETHODCALLTYPE GetBorder(LPRECT lprectBorder);
+	virtual HRESULT STDMETHODCALLTYPE RequestBorderSpace(
+		LPCBORDERWIDTHS pborderwidths);
+	virtual HRESULT STDMETHODCALLTYPE SetBorderSpace(
+		LPCBORDERWIDTHS pborderwidths);
+	virtual HRESULT STDMETHODCALLTYPE SetActiveObject(
+		IOleInPlaceActiveObject *pActiveObject, LPCOLESTR pszObjName);
+
+	// IOleInPlaceFrame
+	virtual HRESULT STDMETHODCALLTYPE InsertMenus(HMENU hmenuShared,
+		LPOLEMENUGROUPWIDTHS lpMenuWidths);
+	virtual HRESULT STDMETHODCALLTYPE SetMenu(HMENU hmenuShared,
+		HOLEMENU holemenu, HWND hwndActiveObject);
+	virtual HRESULT STDMETHODCALLTYPE RemoveMenus(HMENU hmenuShared);
+	virtual HRESULT STDMETHODCALLTYPE SetStatusText(LPCOLESTR pszStatusText);
+	virtual HRESULT STDMETHODCALLTYPE TranslateAccelerator(LPMSG lpmsg,
+		WORD wID);
 
 private:
 

@@ -968,6 +968,60 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::FilterDataObject(IDataObject *pDO,
 	return S_FALSE;
 }
 
+// IOleInPlaceUIWindow
+HRESULT STDMETHODCALLTYPE CBrIELWControl::GetBorder(LPRECT lprectBorder)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::RequestBorderSpace(
+	LPCBORDERWIDTHS pborderwidths)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::SetBorderSpace(
+	LPCBORDERWIDTHS pborderwidths)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::SetActiveObject(
+	IOleInPlaceActiveObject *pActiveObject, LPCOLESTR pszObjName)
+{
+	return S_OK;
+}
+
+// IOleInPlaceFrame
+HRESULT STDMETHODCALLTYPE CBrIELWControl::InsertMenus(HMENU hmenuShared,
+	LPOLEMENUGROUPWIDTHS lpMenuWidths)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::SetMenu(HMENU hmenuShared,
+	HOLEMENU holemenu, HWND hwndActiveObject)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::RemoveMenus(HMENU hmenuShared)
+{
+	return E_NOTIMPL;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::SetStatusText(
+	LPCOLESTR pszStatusText)
+{
+	return S_OK;
+}
+
+HRESULT STDMETHODCALLTYPE CBrIELWControl::TranslateAccelerator(LPMSG lpmsg,
+	WORD wID)
+{
+	return E_NOTIMPL;
+}
+
 IHTMLDocument2 *CBrIELWControl::GetDoc()
 {
 	IDispatch *dispatch = 0;
