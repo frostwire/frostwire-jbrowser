@@ -328,6 +328,13 @@ jint GetJNIEnv(JNIEnv **env, bool *mustDetach);
     return NULL;
 }
 
+- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element 
+    defaultMenuItems:(NSArray *)defaultMenuItems
+{
+    // disable right-click context menu
+    return nil;
+}
+
 //WebDownload
 - (void)downloadDidBegin:(NSURLDownload *)download
 {
