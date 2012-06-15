@@ -15,6 +15,8 @@
 class JIExplorer 
 :  public CBrIELWControl
 {
+private:
+	static const DISPID DISPID_JBROWSER_CALLJAVA = DISPID_VALUE + 1;
 public:
     static jclass    ms_IExplorerComponent;
     
@@ -54,7 +56,6 @@ public:
         LPTSTR lpName, 
         LPTSTR lpValue,
         _bstr_t &bsResult = _bstr_t());
-	virtual void CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult);
     virtual HRESULT JIExplorer::Connect(
         IN BSTR bsURL, 
         IN JNIEnv *env, 
@@ -76,6 +77,29 @@ public:
     boolean m_synthetic;
     boolean m_bBlockNativeInputHandler;
     HRGN    m_hChildArea;
+
+public:
+	virtual HRESULT STDMETHODCALLTYPE GetIDsOfNames(
+            REFIID riid,
+            LPOLESTR* rgszNames,
+            UINT cNames,
+            LCID lcid,
+            DISPID* rgDispId);
+
+    virtual HRESULT STDMETHODCALLTYPE Invoke(
+            DISPID dispIdMember,
+            REFIID riid,
+            LCID lcid,
+            WORD wFlags,
+            DISPPARAMS  *pDispParams,
+            VARIANT  *pVarResult,
+            EXCEPINFO  *pExcepInfo,
+            UINT  *puArgErr);
+
+private:
+	virtual void NavigateComplete();
+	virtual void AddCustomObject(IDispatch* custObj, BSTR name);
+	virtual void CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult);
 };
 
 #endif /* IEXPLORER_H */

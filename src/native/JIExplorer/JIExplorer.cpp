@@ -231,6 +231,113 @@ HRESULT JIExplorer::SendIEEvent(
     OLE_RETURN_HR
 }
 
+HRESULT STDMETHODCALLTYPE JIExplorer::GetIDsOfNames(REFIID riid,
+	LPOLESTR *rgszNames, UINT cNames, LCID lcid, DISPID *rgDispId)
+{
+	HRESULT hr = S_OK;
+	
+	for (UINT i = 0; i < cNames; i++) {
+		if (wmemcmp(rgszNames[i], _T("callJava"), 8) == 0) {
+			rgDispId[i] = DISPID_JBROWSER_CALLJAVA;
+		} else {
+			rgDispId[i] = DISPID_UNKNOWN;
+			hr = DISP_E_UNKNOWNNAME;
+		}
+	}
+	
+	return hr;
+}
+
+HRESULT STDMETHODCALLTYPE JIExplorer::Invoke(
+        DISPID dispIdMember,
+        REFIID riid,
+        LCID lcid,
+        WORD wFlags,
+        DISPPARAMS  *pDispParams,
+        VARIANT  *pVarResult,
+        EXCEPINFO  *pExcepInfo,
+        UINT  *puArgErr
+)
+{
+	OLE_TRY
+    BOOL bNotify = TRUE;
+    switch(dispIdMember){
+    
+	case DISPID_JBROWSER_CALLJAVA:
+		CallJava(pDispParams, pVarResult);
+		return S_OK;
+    default:
+        OLE_HR = CBrIELWControl::Invoke(
+         dispIdMember,
+         riid,
+         lcid,
+         wFlags,
+         pDispParams,
+         pVarResult,
+         pExcepInfo,
+         puArgErr);
+        break;
+    }
+    
+    OLE_CATCH
+    OLE_RETURN_HR
+}
+
+void JIExplorer::NavigateComplete()
+{
+	this->AddCustomObject(this, L"jbrowser");
+}
+
+void JIExplorer::AddCustomObject(IDispatch *custObj, BSTR name)
+{
+	IHTMLDocument2 *doc = GetDoc();
+
+	if (doc == NULL) {
+		return;
+	}
+
+	IHTMLWindow2 *win = NULL;
+	doc->get_parentWindow(&win);
+	doc->Release();
+
+	if (win == NULL) {
+		return;
+	}
+
+	IDispatchEx *winEx;
+	win->QueryInterface(&winEx);
+	win->Release();
+
+	if (winEx == NULL) {
+		return;
+	}
+
+	DISPID dispid; 
+	HRESULT hr = winEx->GetDispID(name, fdexNameEnsure, &dispid);
+
+	if (FAILED(hr)) {
+		return;
+	}
+
+	DISPID namedArgs[] = {DISPID_PROPERTYPUT};
+	DISPPARAMS params;
+	params.rgvarg = new VARIANT[1];
+	params.rgvarg[0].pdispVal = custObj;
+	params.rgvarg[0].vt = VT_DISPATCH;
+	params.rgdispidNamedArgs = namedArgs;
+	params.cArgs = 1;
+	params.cNamedArgs = 1;
+
+	hr = winEx->InvokeEx(dispid, LOCALE_USER_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL); 
+	winEx->Release();
+
+	if (FAILED(hr)) {
+		return;
+	}
+
+	STRACE0(_T("Registered jbrowser object"));
+}
+
 void JIExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
 {
 	if (pDispParams->cArgs == 2)

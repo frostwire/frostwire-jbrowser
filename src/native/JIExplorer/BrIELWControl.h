@@ -99,9 +99,6 @@ class CBrIELWControl :
 	public IDocHostUIHandler,
 	public IOleInPlaceFrame
 {
-private:
-	static const DISPID DISPID_JBROWSER_CALLJAVA = DISPID_VALUE + 1;
-
 public:
     IWebBrowser2Ptr                 m_spIWebBrowser2;
     COLECrossMarshal<IWebBrowser2>  m_ccIWebBrowser2;
@@ -175,7 +172,6 @@ public:
         LPTSTR lpName,
         LPTSTR lpValue,
         _bstr_t &bsResult = _bstr_t() );
-	virtual void CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult);
     void PaintScreenShort();
 public:
 //IUnknown
@@ -217,7 +213,7 @@ public:
         return cRef;
     }
 
-private:
+public:
 // IOleClientSite
     STDMETHOD(SaveObject)()
     {
@@ -354,14 +350,17 @@ private:
     {
         return E_NOTIMPL;
     }
-    STDMETHOD(GetIDsOfNames)(
+    virtual HRESULT STDMETHODCALLTYPE GetIDsOfNames(
             REFIID riid,
             LPOLESTR* rgszNames,
             UINT cNames,
             LCID lcid,
-            DISPID* rgDispId);
+            DISPID* rgDispId)
+	{
+        return E_NOTIMPL;
+    }
 
-    STDMETHOD(Invoke)(
+    virtual HRESULT STDMETHODCALLTYPE Invoke(
             DISPID dispIdMember,
             REFIID riid,
             LCID lcid,
@@ -429,9 +428,10 @@ private:
 
 private:
 
-	IHTMLDocument2* GetDoc();
-	void NavigateComplete();
-	void AddCustomObject(IDispatch* custObj, BSTR name);
 	void SetBrowserEmulation();
+
+public:
+	IHTMLDocument2* GetDoc();
+	virtual void NavigateComplete();
 };
 #endif //_BrIELWControl_H_
