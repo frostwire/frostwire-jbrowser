@@ -4,9 +4,13 @@ import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.peer.ComponentPeer;
 import java.io.InputStream;
+
+import javax.swing.FocusManager;
+import javax.swing.SwingUtilities;
 
 import sun.awt.windows.WComponentPeer;
 
@@ -156,6 +160,125 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
         if(data!=0)
             resizeControl();
     }
+    
+    boolean isFocusOwner = false;
+    
+    @Override
+    public boolean hasFocus() {
+        return isFocusOwner;
+    }
+    
+    /**
+     * Synchronous callback for notifications from native code.
+     * @param iId the event identifier - <code>BrComponentEvent.DISPID_XXXX</code> const
+     * @param stName the event name of (optional)
+     * @param stValue the event paramenter(s) (optional)
+     * @return the application respont
+     */
+    private String postEvent(
+            int iId,
+            String stName,
+            String stValue)
+    {
+        switch(iId){
+        case BrComponentEvent.DISPID_REFRESH:
+            break;
+        case BrComponentEvent.DISPID_DOCUMENTCOMPLETE:
+//            if(isEditable()!=editable){
+//                //System.out.println("setEditable(" + editable + ");");
+//                enableEditing(editable);
+//            } else if(editable) {
+//                //System.out.println("refreshHard");
+//                refreshHard();
+//            }
+//            documentReady = true;
+            break;
+        case BrComponentEvent.DISPID_ONFOCUCHANGE:
+            isFocusOwner = Boolean.parseBoolean(stValue);
+            break;
+        case BrComponentEvent.DISPID_ONFOCUSMOVE:
+            focusMove(Boolean.parseBoolean(stValue));
+            break;
+        case BrComponentEvent.DISPID_PROGRESSCHANGE:
+            break;
+        }        
+        return processBrComponentEvent(
+                new BrComponentEvent(this, iId, stName, stValue));
+    }
+    
+    private void focusMove(final boolean bNext)
+    {
+        SwingUtilities.invokeLater ( new Runnable() {
+            public void run() {
+                KeyboardFocusManager fm = FocusManager.getCurrentKeyboardFocusManager();
+                if(bNext) {
+                   fm.focusNextComponent(IExplorerComponent.this);
+                } else {
+                   fm.focusPreviousComponent(IExplorerComponent.this);
+                }    
+            }
+        });
+    }
+    
+    /**
+     * Internal browser event processor. Converts some events to 
+     * <code>BrComponentListener</code> inteface callbacks and property-changed 
+     * notifications.
+     * @param e the happened browser event
+     */
+    public String processBrComponentEvent(final BrComponentEvent e) {
+       //System.out.println( "IEE:" + e.getID() + " Name:" + e.getName() + " Value:"+ e.getValue() ); 
+       String res = null;
+       BrComponentListener listener = null;//ieListener;
+       if (listener != null) {
+           res = listener.sync(e);
+       }
+       SwingUtilities.invokeLater ( new Runnable() { public void run() {
+               //System.out.println(e);
+               String stValue = e.getValue();
+               stValue = (null==stValue)?"":stValue; 
+               switch(e.getID()){
+               case BrComponentEvent.DISPID_STATUSTEXTCHANGE:
+                   //setStatusText(stValue);
+                   break;
+               case BrComponentEvent.DISPID_BEFORENAVIGATE2:
+                   break;
+               case BrComponentEvent.DISPID_NAVIGATECOMPLETE2:
+                   //setNavigatedURL(stValue);
+                   break;
+               case BrComponentEvent.DISPID_DOWNLOADCOMPLETE:
+                   //setDocumentReady(true);
+                   break;
+               case BrComponentEvent.DISPID_PROGRESSCHANGE:
+                   //setProgressBar(stValue);
+                   break;
+               case BrComponentEvent.DISPID_SETSECURELOCKICON:
+                   //setSecurityIcon(stValue);
+                   break;
+               case BrComponentEvent.DISPID_TITLECHANGE:
+                   //setWindowTitle(stValue);
+                   break;
+               case BrComponentEvent.DISPID_COMMANDSTATECHANGE:
+                   {
+                       String st[] = stValue.split(",");
+                       boolean enable = (0!=Integer.valueOf(st[0]));
+                       switch(Integer.valueOf(st[1])){
+                       case -1:    
+                           ///setToolbarChanged(enable);                            
+                           break;
+                       case 1:    
+                           //setGoForwardEnable(enable);                            
+                           break;
+                       case 2:    
+                           //setGoBackEnable(enable);                                                        
+                           break;                            
+                       }
+                   }    
+                   break;
+               }
+       }});//end posponed operation   
+       return res;
+   }
     
     @Override
     public void paint(Graphics g) {

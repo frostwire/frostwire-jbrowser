@@ -1,4 +1,23 @@
+//////////////////////////////////
+// Copyright (C) 2008 Sun Microsystems, Inc. All rights reserved. Use is
+// subject to license terms.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the Lesser GNU General Public License as
+// published by the Free Software Foundation; either version 2 of the
+// License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+// USA.
 
+// FrostWire Team: a lot of modifications
 #include "stdafx.h" 
 #include "IExplorer.h"
 #include "BrMain.h"
@@ -54,6 +73,8 @@ jfieldID  IExplorer::ms_IExplorerComponent_width = NULL;
 jfieldID  IExplorer::ms_IExplorerComponent_height = NULL;
 
 jfieldID  IExplorer::ms_IExplorerComponent_data = NULL;
+
+jmethodID IExplorer::ms_IExplorerComponent_postEvent = NULL;
 jmethodID IExplorer::ms_IExplorerComponent_callJava = NULL;
 
 void IExplorer::initIDs(JNIEnv *env, jclass clazz)
@@ -69,6 +90,11 @@ void IExplorer::initIDs(JNIEnv *env, jclass clazz)
     ms_IExplorerComponent_height = env->GetFieldID(ms_IExplorerComponent, "height", "I");
     
 	ms_IExplorerComponent_data = env->GetFieldID(clazz, "data", "J");
+
+	ms_IExplorerComponent_postEvent = env->GetMethodID(
+        clazz, 
+        "postEvent", 
+        "(ILjava/lang/String;Ljava/lang/String;)Ljava/lang/String;");
     ms_IExplorerComponent_callJava = env->GetMethodID(
         clazz, 
         "callJava", 
@@ -165,7 +191,7 @@ void IExplorer::destroy(JNIEnv *env)
 }
 
 void IExplorer::RedrawParentRect(LPRECT pRect)
-{     
+{
 }
 
 HRESULT IExplorer::SendIEEvent(
@@ -174,7 +200,35 @@ HRESULT IExplorer::SendIEEvent(
     LPTSTR lpValue,
     _bstr_t &bsResult)
 {
-	return S_OK;                    
+	OLE_DECL
+    JNIEnv *env = (JNIEnv *)JNU_GetEnv(jvm, JNI_VERSION_1_2);
+    if(NULL==env){
+        OLE_HR = E_FAIL;
+    } else {   
+        jstring jsName = JNU_NewStringPlatform(env, lpName);
+        if(NULL==jsName){
+            OLE_HR = E_OUTOFMEMORY;
+        } else {
+            jstring jsValue = JNU_NewStringPlatform(env, lpValue);
+            if(NULL==jsValue){
+                OLE_HR = E_OUTOFMEMORY;
+            } else {
+                jstring jsRes = (jstring)env->CallObjectMethod(
+                    m_this, 
+                    ms_IExplorerComponent_postEvent,
+                    iId, 
+                    jsName, 
+                    jsValue);
+                if( NULL!=jsRes ){
+                    bsResult = JStringBuffer(env, jsRes);
+                    env->DeleteLocalRef(jsRes);
+                }
+                env->DeleteLocalRef(jsValue);
+            }
+            env->DeleteLocalRef(jsName);
+        }
+    }
+    OLE_RETURN_HR
 }
 
 void IExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
