@@ -31,15 +31,6 @@ public class WebKitComponent extends CocoaComponent implements WebBrowser {
     }
 
     @Override
-    public void go(String url) {
-        this.url = url;
-        if (url != null)
-            sendMsg(JWebKit_loadURL, url);
-        else {
-            sendMsg(JWebKit_loadURL, "about:blank");
-        }
-    }
-
     public int createNSView() {
         return (int) createNSViewLong();
     }
@@ -56,23 +47,55 @@ public class WebKitComponent extends CocoaComponent implements WebBrowser {
         return nsObject;
     }
 
+    @Override
     public Dimension getMaximumSize() {
         return new Dimension(Short.MAX_VALUE, Short.MAX_VALUE);
     }
 
+    @Override
     public Dimension getMinimumSize() {
-        return new Dimension(100, 100);
+        return new Dimension(25, 25);
     }
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(270, 270);
+        return new Dimension(250, 250);
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        if (url != null) {
+            sendMsg(JWebKit_loadURL, url);
+        }
+    }
+
+    @Override
     public Component getComponent() {
         return this;
     }
 
+    @Override
+    public void go(String url) {
+        this.url = url;
+        if (url != null)
+            sendMsg(JWebKit_loadURL, url);
+        else {
+            sendMsg(JWebKit_loadURL, "about:blank");
+        }
+    }
+
+    @Override
+    public void back() {
+        sendMsg(JWebKit_goBack);
+    }
+
+    @Override
+    public void forward() {
+        sendMsg(JWebKit_goForward);
+    }
+
+    @Override
     public void stop() {
         sendMsg(JWebKit_stopLoading);
     }
@@ -80,40 +103,6 @@ public class WebKitComponent extends CocoaComponent implements WebBrowser {
     @Override
     public void reload() {
         sendMsg(JWebKit_reload);
-    }
-
-    public void back() {
-        sendMsg(JWebKit_goBack);
-    }
-
-    public void forward() {
-        sendMsg(JWebKit_goForward);
-    }
-
-    public void startLoading(String url) {
-    }
-
-    public void finishLoading() {
-        //executeJS("alert(window.jbrowser.callJava('testFn', 'hello'))");
-        function(new BrowserFunction("testFn") {
-            @Override
-            public String run(String data) {
-                return "Callback: " + data;
-            }
-        });
-        runJS("alert(testFn('hello'))");
-    }
-
-    public String callJava(String function, String data) {
-        if (functions.containsKey(function)) {
-            return functions.get(function).run(data);
-        } else {
-            return null;
-        }
-    }
-
-    public boolean runJavaScriptAlertPanelWithMessage(String message) {
-        return true;
     }
 
     @Override
@@ -127,12 +116,22 @@ public class WebKitComponent extends CocoaComponent implements WebBrowser {
         runJS(fn.createJS());
     }
 
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        if (url != null) {
-            sendMsg(JWebKit_loadURL, url);
+    public void startLoading(String url) {
+    }
+
+    public void finishLoading() {
+    }
+
+    public String callJava(String function, String data) {
+        if (functions.containsKey(function)) {
+            return functions.get(function).run(data);
+        } else {
+            return null;
         }
+    }
+
+    public boolean runJavaScriptAlertPanelWithMessage(String message) {
+        return true;
     }
 
     @Override

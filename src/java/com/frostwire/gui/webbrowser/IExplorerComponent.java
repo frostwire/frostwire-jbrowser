@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.KeyboardFocusManager;
 import java.awt.peer.ComponentPeer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.FocusManager;
 import javax.swing.SwingUtilities;
@@ -71,6 +73,8 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     public static final int DISPID_ONFOCUSMOVE = -2;
     public static final int DISPID_REFRESH = -3;
 
+    private final Map<String, BrowserFunction> functions;
+
     long data = 0;
 
     private int notifyCounter = 0;
@@ -79,7 +83,8 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     private String url;
 
     public IExplorerComponent() {
-        setMinimumSize(new Dimension(10, 10));
+        functions = new HashMap<String, BrowserFunction>();
+        setMinimumSize(new Dimension(25, 25));
     }
 
     /**
@@ -213,10 +218,16 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
 
     @Override
     public void function(BrowserFunction fn) {
+        functions.put(fn.getName(), fn);
+        runJS(fn.createJS());
     }
 
-    public String callJava(String name, String data) {
-        return name + "-" + data;
+    public String callJava(String function, String data) {
+        if (functions.containsKey(function)) {
+            return functions.get(function).run(data);
+        } else {
+            return null;
+        }
     }
 
     private void onRemoveNotify() {

@@ -2,7 +2,6 @@ package com.frostwire.gui.webbrowser;
 
 import java.awt.Toolkit;
 
-
 public final class BrowserFactory {
 
     private static final String IEXPLORER_LIBRARY = "JIExplorer";
@@ -26,6 +25,18 @@ public final class BrowserFactory {
     }
 
     private BrowserFactory() {
+    }
+
+    public WebBrowser createBrowser() {
+        if (loadLibrary()) {
+            if (IS_OS_WINDOWS) {
+                return new IExplorerComponent();
+            } else if (IS_OS_MAC) {
+                return new WebKitComponent();
+            }
+        }
+
+        return null;
     }
 
     private boolean loadLibrary() {
@@ -65,18 +76,5 @@ public final class BrowserFactory {
         } else {
             return (OS_NAME.indexOf(osname) >= 0);
         }
-    }
-
-    public WebBrowser createBrowser() {
-        if (loadLibrary()) {
-            if (IS_OS_WINDOWS) {
-                //return new InternetExplorerBrowser();
-                return new IExplorerComponent();
-            } else if (IS_OS_MAC) {
-                return new WebKitComponent();
-            }
-        }
-
-        return null;
     }
 }

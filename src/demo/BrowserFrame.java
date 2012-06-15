@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2008 Sun Microsystems, Inc. All rights reserved. Use is
- * subject to license terms.
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the Lesser GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
- * USA.
- */
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -28,13 +8,13 @@ import java.awt.event.WindowEvent;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -43,48 +23,41 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import com.frostwire.gui.webbrowser.BrowserFactory;
+import com.frostwire.gui.webbrowser.BrowserFunction;
 import com.frostwire.gui.webbrowser.WebBrowser;
 
 /**
  * Sample browser implementation.
  */
-public class BrowserFrame extends javax.swing.JFrame {
+public class BrowserFrame extends JFrame {
+
     private static final long serialVersionUID = -7065448910990348234L;
 
     private JButton bnBack;
     private JButton bnForward;
     private JButton bnGo;
-    private JButton bnRefresh;
     private JButton bnReload;
     private JButton bnStop;
 
     private JTextField edAddress;
-    private JTextField edStatusText;
     private JMenu fileJMenu;
-    private JToolBar ieStatus;
     private JToolBar ieToolBar;
     private JPanel jPanel1;
     private JLabel lbURL;
     private JMenuBar mainJMenuBar;
     private JMenuItem miExit;
-    private JProgressBar pbDownloadDoc;
     private JMenu toolsJMenu;
     private JMenuItem menuRunJS;
     private JMenuItem menuRunJS2;
 
     private WebBrowser browser;
 
-    /** Creates new form BrowserFrame */
     public BrowserFrame() {
         initComponents();
     }
 
-    /** This method is called from within the constructor to
-     * initialize the form.
-     */
     private void initComponents() {
         jPanel1 = new JPanel();
-        bnRefresh = new JButton();
         browser = BrowserFactory.instance().createBrowser();
         ieToolBar = new JToolBar();
         bnBack = new JButton();
@@ -94,9 +67,6 @@ public class BrowserFrame extends javax.swing.JFrame {
         lbURL = new JLabel();
         edAddress = new JTextField();
         bnGo = new JButton();
-        ieStatus = new JToolBar();
-        edStatusText = new JTextField();
-        pbDownloadDoc = new JProgressBar();
         mainJMenuBar = new JMenuBar();
         fileJMenu = new JMenu();
         miExit = new JMenuItem();
@@ -112,26 +82,13 @@ public class BrowserFrame extends javax.swing.JFrame {
 
         jPanel1.setLayout(new BorderLayout());
 
-        bnRefresh.setFocusable(false);
-        bnRefresh.setHorizontalAlignment(SwingConstants.LEADING);
-        bnRefresh.setHorizontalTextPosition(SwingConstants.CENTER);
-        bnRefresh.setVerticalTextPosition(SwingConstants.BOTTOM);
-
-        bnRefresh.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                bnRefreshActionPerformed(evt);
-            }
-        });
-
-        bnRefresh.getAccessibleContext().setAccessibleName("bnRefresh");
-
         browser.go("http://www.google.com");
 
         jPanel1.add(browser.getComponent(), BorderLayout.CENTER);
 
         ieToolBar.setRollover(true);
 
-        bnBack.setIcon(new ImageIcon(getClass().getResource("/images/back.png"))); // NOI18N
+        bnBack.setIcon(new ImageIcon(getClass().getResource("/images/back.png")));
         bnBack.setToolTipText("Go back one page");
         bnBack.setFocusable(false);
         bnBack.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -144,7 +101,7 @@ public class BrowserFrame extends javax.swing.JFrame {
         });
         ieToolBar.add(bnBack);
 
-        bnForward.setIcon(new ImageIcon(getClass().getResource("/images/forward.png"))); // NOI18N
+        bnForward.setIcon(new ImageIcon(getClass().getResource("/images/forward.png")));
         bnForward.setToolTipText("Go forward one page");
         bnForward.setFocusable(false);
         bnForward.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -157,7 +114,7 @@ public class BrowserFrame extends javax.swing.JFrame {
         });
         ieToolBar.add(bnForward);
 
-        bnReload.setIcon(new ImageIcon(getClass().getResource("/images/reload.png"))); // NOI18N
+        bnReload.setIcon(new ImageIcon(getClass().getResource("/images/reload.png")));
         bnReload.setToolTipText("Reload current page");
         bnReload.setFocusable(false);
         bnReload.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -169,8 +126,8 @@ public class BrowserFrame extends javax.swing.JFrame {
         });
         ieToolBar.add(bnReload);
 
-        bnStop.setIcon(new ImageIcon(getClass().getResource("/images/stop.png"))); // NOI18N
-        bnStop.setToolTipText("Reload current page");
+        bnStop.setIcon(new ImageIcon(getClass().getResource("/images/stop.png")));
+        bnStop.setToolTipText("Stop current page");
         bnStop.setFocusable(false);
         bnStop.setHorizontalTextPosition(SwingConstants.CENTER);
         bnStop.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -208,27 +165,6 @@ public class BrowserFrame extends javax.swing.JFrame {
 
         jPanel1.add(ieToolBar, BorderLayout.PAGE_START);
 
-        ieStatus.setFloatable(false);
-        ieStatus.setRollover(true);
-        ieStatus.setMaximumSize(new Dimension(65536, 20));
-        ieStatus.setMinimumSize(new Dimension(10, 20));
-
-        edStatusText.setEditable(false);
-        edStatusText.setMaximumSize(new Dimension(2147483647, 20));
-
-        edStatusText.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                edStatusTextActionPerformed(evt);
-            }
-        });
-        ieStatus.add(edStatusText);
-
-        pbDownloadDoc.setMaximumSize(new Dimension(100, 16));
-        pbDownloadDoc.setPreferredSize(new Dimension(100, 16));
-        ieStatus.add(pbDownloadDoc);
-
-        jPanel1.add(ieStatus, BorderLayout.PAGE_END);
-
         fileJMenu.setText("File");
         fileJMenu.setToolTipText("File Operations");
 
@@ -250,13 +186,13 @@ public class BrowserFrame extends javax.swing.JFrame {
                 menuRunJS_actionPerformed(e);
             }
         });
-        
+
         menuRunJS2 = new JMenuItem();
         menuRunJS2.setText("Run JS 2");
         menuRunJS2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                menuRunJS_actionPerformed(e);
+                menuRunJS2_actionPerformed(e);
             }
         });
 
@@ -268,7 +204,7 @@ public class BrowserFrame extends javax.swing.JFrame {
 
         setJMenuBar(mainJMenuBar);
 
-        GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jPanel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE));
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jPanel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE));
@@ -277,11 +213,17 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     protected void menuRunJS_actionPerformed(ActionEvent e) {
-        //browser.runJS("alert('test alert');");
-        browser.runJS("alert(window.jbrowser.callJava('functionName', 'functionData'));");
+        browser.runJS("alert('test alert');");
     }
 
-    private void edStatusTextActionPerformed(ActionEvent evt) {
+    protected void menuRunJS2_actionPerformed(ActionEvent e) {
+        browser.function(new BrowserFunction("testFn") {
+            @Override
+            public String run(String data) {
+                return "Callback: " + data;
+            }
+        });
+        browser.runJS("alert(testFn('hello'))");
     }
 
     private void miExitActionPerformed(ActionEvent evt) {
@@ -308,17 +250,13 @@ public class BrowserFrame extends javax.swing.JFrame {
         browser.stop();
     }
 
-    private void bnRefreshActionPerformed(ActionEvent evt) {
-    }
-
     public static void main(String args[]) {
-        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-        JPopupMenu.setDefaultLightWeightPopupEnabled
-        (false);
-
         System.setProperty("com.apple.eawt.CocoaComponent.CompatibilityMode", "false");
         System.setProperty("apple.laf.useScreenMenuBar", "true");
         System.setProperty("sun.awt.noerasebackground", "true");
+
+        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -326,10 +264,5 @@ public class BrowserFrame extends javax.swing.JFrame {
         }
 
         new BrowserFrame().setVisible(true);
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                //new BrowserFrame().setVisible(true);
-            }
-        });
     }
 }
