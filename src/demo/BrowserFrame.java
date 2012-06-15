@@ -125,7 +125,7 @@ public class BrowserFrame extends javax.swing.JFrame {
 
         bnRefresh.getAccessibleContext().setAccessibleName("bnRefresh");
 
-        //browser.go("http://www.google.com");
+        browser.go("http://www.google.com");
 
         jPanel1.add(browser.getComponent(), BorderLayout.CENTER);
 
