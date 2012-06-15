@@ -164,19 +164,8 @@ void IExplorer::destroy(JNIEnv *env)
     m_this = NULL;
 }
 
-void IExplorer::updateTransparentMask(LPRECT prc)
-{
-}
-
-void IExplorer::setTransparent(boolean bTransparent)
-{
- 
-}
-
-
 void IExplorer::RedrawParentRect(LPRECT pRect)
-{  
-        
+{     
 }
 
 HRESULT IExplorer::SendIEEvent(
@@ -185,7 +174,7 @@ HRESULT IExplorer::SendIEEvent(
     LPTSTR lpValue,
     _bstr_t &bsResult)
 {
-                 return S_OK;                    
+	return S_OK;                    
 }
 
 void IExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
@@ -222,19 +211,46 @@ void IExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
 
 LRESULT IExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	return ::CallWindowProc((WNDPROC)GetOldIEWndProc(), hWnd, msg, wParam, lParam);
+	LRESULT lRes = 0;
+	
+	LONG_PTR pHook = NULL;
+    if(WM_NCDESTROY==msg){
+        RemoveHook(hWnd);
+    } else if(
+        (msg >= WM_KEYFIRST 
+        && msg <= WM_KEYLAST)
+    ){
+        MSG _msg = { hWnd, msg, wParam, lParam, 0, { 0, 0 } };
+        LPMSG lpMsg = &_msg;
+        IOleInPlaceActiveObjectPtr spInPlaceActiveObject(m_spIWebBrowser2);
+        if(spInPlaceActiveObject){
+            OLE_DECL;
+            OLE_HR = spInPlaceActiveObject->TranslateAccelerator(lpMsg);
+            if(WM_KEYDOWN == msg && VK_TAB==wParam && !IsCtrlKeyDown() && !IsAltKeyDown()){
+                STRACE(_T("WM_KEYDOWN tab %08x %08x"), lParam, OLE_HR);
+                if(S_FALSE==OLE_HR){
+                    SendIEEvent(
+                        -2,
+                        _T("FocusMove"),
+                        IsShiftKeyDown() ? _T("false") : _T("true")
+                    );
+                }    
+            }    
+            if(OLE_HR == S_OK){
+                return 0;
+            }
+        }
+        pHook = ::SetWindowLongPtr(hWnd, GWLP_WNDPROC, GetOldIEWndProc());        
+    }
 
-    LRESULT lRes = 0;
-    switch(msg){
+	switch(msg){
     case WM_SETFOCUS:
-        setTransparent(false);
         SendIEEvent(-1, _T("OnFocusMove"), _T("true"));
         STRACE0(_T("WM_SETFOCUS"));
         break;
     case WM_KILLFOCUS:
         SendIEEvent(-1, _T("OnFocusMove"), _T("false"));
         STRACE0(_T("WM_KILLFOCUS"));
-        setTransparent(true);
         break;
     case WM_KEYDOWN:
     case WM_KEYUP:
@@ -242,39 +258,8 @@ LRESULT IExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_SYSKEYUP:
     case WM_CHAR:
     case WM_SYSCHAR:
-    //case WM_INPUT:
-        lRes = CBrIELWControl::NewIEProc(hWnd, msg, wParam, lParam);
-        return lRes;
-    case WM_SETCURSOR:    
-        lRes = CBrIELWControl::NewIEProc(hWnd, msg, wParam, lParam);
-        {
-            //POINT pt;
-            //if( GetCursorPos(&pt) && hWnd == WindowFromPoint(pt) ){
-			/*
-                JNIEnv *env = (JNIEnv *)JNU_GetEnv(jvm, JNI_VERSION_1_2);
-                if( NULL!=env ) {
-                    jobject target = env->GetObjectField(m_this, ms_jcidWBrComponentPeer_target);
-                    if(NULL!=target){
-                        jobject ocursor = env->CallObjectMethod(
-                            target, 
-                            ms_jcidWBrComponent_getCursor);
-                        if(NULL!=ocursor){
-                            jlong pData = env->GetLongField(ocursor, ms_jcidCursor_pData);
-                            if(0!=pData){
-                                //Warning:HACK!!!
-                                //pData is a pointer to AwtCursor
-                                *(HCURSOR *)((LPBYTE)pData + 0x44) = GetCursor();
-                                //STRACE1(_T("SET_CURSOR"));
-                            }
-                            env->DeleteLocalRef(ocursor);
-                        }
-                        env->DeleteLocalRef(target);
-                    }    
-                }
-				*/
-            //}
-        }
-        return lRes;
+
+    case WM_SETCURSOR:
 
     case WM_MOUSEACTIVATE:
 
@@ -304,22 +289,16 @@ LRESULT IExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_MBUTTONUP: 
 
     case WM_MOUSEWHEEL:
-        //AwtComponent::WindowProc(msg, wParam, lParam);
-        STRACE0(_T("mouse msg:%08x"), msg);
-        if( !m_bBlockNativeInputHandler ) {
-           lRes = CBrIELWControl::NewIEProc(hWnd, msg, wParam, lParam);
-        }
-        return lRes;
+
     default:
         break;
     }
-    lRes = CBrIELWControl::NewIEProc(hWnd, msg, wParam, lParam);
-    return lRes;
-}
 
-jintArray IExplorer::NativeDraw(LPRECT prcDraw, BOOL bToImage)
-{
-	return NULL;
+	lRes = ::CallWindowProc((WNDPROC)GetOldIEWndProc(), hWnd, msg, wParam, lParam);      
+    if(pHook && m_hwndIE==hWnd) //window can be disconnected ;)
+        ::SetWindowLongPtr(hWnd, GWLP_WNDPROC, pHook);
+
+    return lRes;
 }
 
 struct JavaInputStream : public CStubStream
@@ -694,12 +673,12 @@ JNIEXPORT jstring JNICALL Java_com_frostwire_gui_browser_windows_IExplorerCompon
  * Method:    setURL
  * Signature: (Ljava/lang/String;)V
  */
-struct SetURLAction : public BrowserAction{
+struct SetURLAction2 : public BrowserAction{
     JStringBuffer m_jstURL;
     IExplorer *m_pThis;
     jobject m_jisURL;
 
-    SetURLAction(
+    SetURLAction2(
         IExplorer *pThis,
         JNIEnv *env,
         jstring jURL,
@@ -731,7 +710,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
         pThis->GetThread()->MakeAction(
             env,
             "URL navigation error",
-            SetURLAction(
+            SetURLAction2(
                 pThis,
                 env,
                 jsURL,
@@ -845,7 +824,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
  * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
  * Method:    nativeRepaint
  */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_nativeRepaint(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_nativePaint(
     JNIEnv *env, 
     jobject self)
 {

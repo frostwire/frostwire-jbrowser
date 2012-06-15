@@ -127,7 +127,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     public native void setURL(String stURL, InputStream is);
 
     public native void resizeControl();
-    public native void nativeRepaint();
+    public native void nativePaint();
     
     public void setSize( int width, int height ) 
     {
@@ -161,7 +161,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     public void paint(Graphics g) {
         super.paint(g);
         if (data != 0) {
-            nativeRepaint();
+            nativePaint();
         }
     }
 }

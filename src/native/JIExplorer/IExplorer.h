@@ -45,8 +45,6 @@ public:
         jobject othis);
 
     virtual void destroy(JNIEnv *env);
-    virtual void updateTransparentMask(LPRECT prc);
-    virtual void setTransparent(boolean bTransparent);
 
     IExplorer();
     virtual ~IExplorer();
@@ -69,10 +67,7 @@ private:
     virtual void RedrawParentRect(LPRECT pRect);
     virtual LRESULT NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-public:
-    //actors     
-    jintArray NativeDraw(LPRECT prcDraw, BOOL bToImage);
-       
+
 private:
     RECT    m_rcInvalid;
     DWORD   m_dwKey;

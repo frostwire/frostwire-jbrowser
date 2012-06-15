@@ -146,6 +146,7 @@ private:
     BOOL IsSmoothScroll();
     static LRESULT CALLBACK NewIEProcStub(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+public:
     void RemoveHook(HWND hWnd);
     void AddHook();
 
