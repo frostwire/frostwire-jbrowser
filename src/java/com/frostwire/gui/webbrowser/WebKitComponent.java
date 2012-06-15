@@ -1,4 +1,4 @@
-package com.frostwire.gui.webbrowser.macosx;
+package com.frostwire.gui.webbrowser;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.apple.eawt.CocoaComponent;
-import com.frostwire.gui.webbrowser.BrowserFunction;
-import com.frostwire.gui.webbrowser.WebBrowser;
 
-public class WebKitBrowser extends CocoaComponent implements WebBrowser {
+public class WebKitComponent extends CocoaComponent implements WebBrowser {
 
     private static final long serialVersionUID = -8610816510893757828L;
 
@@ -28,7 +26,7 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
 
     private String url;
 
-    public WebKitBrowser() {
+    public WebKitComponent() {
         functions = new HashMap<String, BrowserFunction>();
     }
 

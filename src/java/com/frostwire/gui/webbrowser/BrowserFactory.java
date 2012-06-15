@@ -2,9 +2,6 @@ package com.frostwire.gui.webbrowser;
 
 import java.awt.Toolkit;
 
-import com.frostwire.gui.webbrowser.macosx.WebKitBrowser;
-import com.frostwire.gui.webbrowser.windows.IExplorerComponent;
-import com.frostwire.gui.webbrowser.windows.InternetExplorerBrowser;
 
 public final class BrowserFactory {
 
@@ -76,7 +73,7 @@ public final class BrowserFactory {
                 //return new InternetExplorerBrowser();
                 return new IExplorerComponent();
             } else if (IS_OS_MAC) {
-                return new WebKitBrowser();
+                return new WebKitComponent();
             }
         }
 

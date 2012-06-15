@@ -81,7 +81,7 @@ void JIExplorer::initIDs(JNIEnv *env, jclass clazz)
 {
     ms_IExplorerComponent = getGlobalJavaClazz(
         env,
-        "com/frostwire/gui/webbrowser/windows/IExplorerComponent"
+        "com/frostwire/gui/webbrowser/IExplorerComponent"
     );
 
     ms_IExplorerComponent_x = env->GetFieldID(ms_IExplorerComponent, "x", "I");
@@ -653,10 +653,10 @@ void JIExplorer::RunJS(IN BSTR bsCode)
 extern "C" {
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    initIDs
   */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_initIDs(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_initIDs(
     JNIEnv *env, 
     jclass cls)
 {
@@ -664,34 +664,30 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    create
   */
 struct CreateAction : public BrowserAction
 {
     HWND    m_parent;
     JIExplorer *m_pThis;
-    int m_ePaintAlgorithm;
 
     CreateAction(
         JIExplorer *pThis,
-        HWND parent,
-        int ePaintAlgorithm)
+        HWND parent)
     : m_pThis(pThis),
-      m_parent(parent),
-      m_ePaintAlgorithm(ePaintAlgorithm)
+      m_parent(parent)
     {}
 
     virtual HRESULT Do(JNIEnv *env){
-        return m_pThis->create(env, m_parent, m_ePaintAlgorithm);
+        return m_pThis->create(env, m_parent, 0x0004);
     }
 };
 
-JNIEXPORT jlong JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_create(
+JNIEXPORT jlong JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_create(
     JNIEnv *env, 
     jobject self,
-    jlong parent,
-    jint  ePaintAlgorithm)
+    jlong parent)
 {
 	JIExplorer *pThis = new JIExplorer(env, self);
 	if(pThis){
@@ -701,8 +697,7 @@ JNIEXPORT jlong JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompo
             "Browser create error",
             CreateAction(
                 pThis,
-                (HWND)parent,
-                ePaintAlgorithm)));
+                (HWND)parent)));
         OLE_CATCH
         if(FAILED(OLE_HR)){
             pThis->destroy(env);
@@ -714,7 +709,7 @@ JNIEXPORT jlong JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompo
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    destroy
   */
 struct DestroyAction : public BrowserAction
@@ -729,7 +724,7 @@ struct DestroyAction : public BrowserAction
         return S_OK;
     }
 };
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_destroy(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_destroy(
     JNIEnv *env, 
     jobject self)
 {
@@ -745,7 +740,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    execJS
  */
 struct ExecJSAction : public BrowserAction
@@ -887,7 +882,7 @@ struct ExecJSAction : public BrowserAction
     }
 };
 
-JNIEXPORT jstring JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_execJS(
+JNIEXPORT jstring JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_execJS(
     JNIEnv *env, 
     jobject self,
     jstring jsCode)
@@ -911,7 +906,7 @@ JNIEXPORT jstring JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCom
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    setURL
  * Signature: (Ljava/lang/String;)V
  */
@@ -941,7 +936,7 @@ struct SetURLAction : public BrowserAction{
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_setURL(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_setURL(
     JNIEnv *env, 
     jobject self,
     jstring jsURL,
@@ -962,8 +957,8 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
- * Method:    setVisible
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
+ * Method:    nativeSetVisible
  */
 struct ShowAction : public BrowserAction
 {
@@ -983,7 +978,7 @@ struct ShowAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeSetVisible(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeSetVisible(
     JNIEnv *env, 
     jobject self,
     jboolean aFlag)
@@ -1000,7 +995,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    nativeSetEnabled
  */
 struct EnableAction : public BrowserAction
@@ -1021,7 +1016,7 @@ struct EnableAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeSetEnabled(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeSetEnabled(
     JNIEnv *env, 
     jobject self,
     jboolean enabled)
@@ -1038,10 +1033,10 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    nativeSetBounds
  */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeSetBounds(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeSetBounds(
 	JNIEnv *env, 
 	jobject self)
 {
@@ -1057,8 +1052,8 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
- * Method:    refresh
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
+ * Method:    nativeRefresh
  */
 struct RefreshAction : public BrowserAction
 {
@@ -1078,7 +1073,7 @@ struct RefreshAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeRefresh(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeRefresh(
     JNIEnv *env, 
     jobject self,
     jboolean clearCache)
@@ -1095,8 +1090,8 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
- * Method:    reload
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
+ * Method:    nativeReload
  */
 struct ReloadAction : public BrowserAction
 {
@@ -1113,7 +1108,7 @@ struct ReloadAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeReload(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeReload(
     JNIEnv *env, 
     jobject self)
 {
@@ -1128,8 +1123,8 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
- * Method:    back
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
+ * Method:    nativeBack
  */
 struct BackAction : public BrowserAction
 {
@@ -1146,7 +1141,7 @@ struct BackAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeBack(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeBack(
     JNIEnv *env, 
     jobject self)
 {
@@ -1161,8 +1156,8 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
- * Method:    forward
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
+ * Method:    nativeForward
  */
 struct ForwardAction : public BrowserAction
 {
@@ -1179,7 +1174,7 @@ struct ForwardAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeForward(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeForward(
     JNIEnv *env, 
     jobject self)
 {
@@ -1194,8 +1189,8 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
- * Method:    go
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
+ * Method:    nativeGo
  * Signature: (Ljava/lang/String;)V
  */
 struct GoAction : public BrowserAction{
@@ -1216,7 +1211,7 @@ struct GoAction : public BrowserAction{
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeGo(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeGo(
     JNIEnv *env, 
     jobject self,
     jstring jsURL)
@@ -1234,7 +1229,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    nativeStop
  */
 struct StopAction : public BrowserAction
@@ -1254,7 +1249,7 @@ struct StopAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeStop(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeStop(
     JNIEnv *env, 
     jobject self)
 {
@@ -1269,7 +1264,7 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 }
 
 /*
- * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_IExplorerComponent
  * Method:    nativeRunJS
  * Signature: (Ljava/lang/String;)V
  */
@@ -1291,7 +1286,7 @@ struct RunJSAction : public BrowserAction{
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeRunJS(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_IExplorerComponent_nativeRunJS(
     JNIEnv *env, 
     jobject self,
     jstring jsCode)

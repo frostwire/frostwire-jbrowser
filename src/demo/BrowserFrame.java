@@ -277,8 +277,8 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     protected void menuRunJS_actionPerformed(ActionEvent e) {
-        browser.runJS("alert('test alert');");
-        //browser.runJS("alert(window.jbrowser.callJava('functionName', 'functionData'));");
+        //browser.runJS("alert('test alert');");
+        browser.runJS("alert(window.jbrowser.callJava('functionName', 'functionData'));");
     }
 
     private void edStatusTextActionPerformed(ActionEvent evt) {
