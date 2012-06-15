@@ -6,6 +6,10 @@ public interface WebBrowser {
 
     public Component getComponent();
 
+    public WebBrowserListener getListener();
+
+    public void setListener(WebBrowserListener listener);
+
     public void go(String url);
 
     public void back();

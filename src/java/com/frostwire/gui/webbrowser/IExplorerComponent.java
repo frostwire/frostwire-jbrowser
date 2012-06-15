@@ -81,6 +81,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     private boolean isFocusOwner = false;
 
     private String url;
+    private WebBrowserListener listener;
 
     public IExplorerComponent() {
         functions = new HashMap<String, BrowserFunction>();
@@ -167,6 +168,16 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     @Override
     public Component getComponent() {
         return this;
+    }
+
+    @Override
+    public WebBrowserListener getListener() {
+        return listener;
+    }
+
+    @Override
+    public void setListener(WebBrowserListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -276,6 +287,11 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
             //                refreshHard();
             //            }
             //            documentReady = true;
+            if (listener != null) {
+                listener.onComplete(this, url);
+            }
+            break;
+        case DISPID_NAVIGATECOMPLETE2:
             break;
         case DISPID_ONFOCUCHANGE:
             isFocusOwner = Boolean.parseBoolean(stValue);

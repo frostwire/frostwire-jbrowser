@@ -25,11 +25,12 @@ import javax.swing.WindowConstants;
 import com.frostwire.gui.webbrowser.BrowserFactory;
 import com.frostwire.gui.webbrowser.BrowserFunction;
 import com.frostwire.gui.webbrowser.WebBrowser;
+import com.frostwire.gui.webbrowser.WebBrowserListener;
 
 /**
  * Sample browser implementation.
  */
-public class BrowserFrame extends JFrame {
+public class BrowserFrame extends JFrame implements WebBrowserListener {
 
     private static final long serialVersionUID = -7065448910990348234L;
 
@@ -58,7 +59,6 @@ public class BrowserFrame extends JFrame {
 
     private void initComponents() {
         jPanel1 = new JPanel();
-        browser = BrowserFactory.instance().createBrowser();
         ieToolBar = new JToolBar();
         bnBack = new JButton();
         bnForward = new JButton();
@@ -82,6 +82,8 @@ public class BrowserFrame extends JFrame {
 
         jPanel1.setLayout(new BorderLayout());
 
+        browser = BrowserFactory.instance().createBrowser();
+        browser.setListener(this);
         browser.go("http://www.google.com");
 
         jPanel1.add(browser.getComponent(), BorderLayout.CENTER);
@@ -217,12 +219,6 @@ public class BrowserFrame extends JFrame {
     }
 
     protected void menuRunJS2_actionPerformed(ActionEvent e) {
-        browser.function(new BrowserFunction("testFn") {
-            @Override
-            public String run(String data) {
-                return "Callback: " + data;
-            }
-        });
         browser.runJS("alert(testFn('hello'))");
     }
 
@@ -248,6 +244,16 @@ public class BrowserFrame extends JFrame {
 
     private void bnStopActionPerformed(ActionEvent evt) {
         browser.stop();
+    }
+
+    @Override
+    public void onComplete(WebBrowser browser, String url) {
+        browser.function(new BrowserFunction("testFn") {
+            @Override
+            public String run(String data) {
+                return "Callback: " + data;
+            }
+        });
     }
 
     public static void main(String args[]) {

@@ -25,6 +25,7 @@ public class WebKitComponent extends CocoaComponent implements WebBrowser {
     private long nsObject = 0;
 
     private String url;
+    private WebBrowserListener listener;
 
     public WebKitComponent() {
         functions = new HashMap<String, BrowserFunction>();
@@ -76,6 +77,16 @@ public class WebKitComponent extends CocoaComponent implements WebBrowser {
     }
 
     @Override
+    public WebBrowserListener getListener() {
+        return listener;
+    }
+
+    @Override
+    public void setListener(WebBrowserListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
     public void go(String url) {
         this.url = url;
         if (url != null)
@@ -120,6 +131,9 @@ public class WebKitComponent extends CocoaComponent implements WebBrowser {
     }
 
     public void finishLoading() {
+        if (listener != null) {
+            listener.onComplete(this, url);
+        }
     }
 
     public String callJava(String function, String data) {
