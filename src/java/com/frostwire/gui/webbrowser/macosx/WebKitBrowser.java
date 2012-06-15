@@ -79,6 +79,7 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
         sendMsg(JWebKit_stopLoading);
     }
 
+    @Override
     public void reload() {
         sendMsg(JWebKit_reload);
     }
@@ -159,8 +160,4 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     }
 
     private native long createNSView1();
-
-    @Override
-    public void refreshContent() {
-    }
 }

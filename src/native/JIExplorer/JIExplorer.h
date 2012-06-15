@@ -100,6 +100,9 @@ private:
 	virtual void NavigateComplete();
 	virtual void AddCustomObject(IDispatch* custObj, BSTR name);
 	virtual void CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult);
+
+public:
+	void Refresh(BOOL bClearCache);
 };
 
 #endif /* IEXPLORER_H */

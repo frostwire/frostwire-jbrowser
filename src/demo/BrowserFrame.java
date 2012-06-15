@@ -301,7 +301,7 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     private void bnReloadActionPerformed(ActionEvent evt) {
-        browser.refreshContent();
+        browser.reload();
     }
 
     private void bnStopActionPerformed(ActionEvent evt) {

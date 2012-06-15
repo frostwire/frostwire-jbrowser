@@ -568,6 +568,22 @@ HRESULT JIExplorer::Connect(
     OLE_RETURN_HR
 }
 
+void JIExplorer::Refresh(BOOL bClearCache)
+{
+	OLE_TRY
+	IWebBrowser2Ptr br(m_spIWebBrowser2);
+	OLE_CHECK_NOTNULLSP(br)
+	if (bClearCache) {
+		VARIANT v;
+		v.vt = VT_I4;
+		v.lVal = REFRESH_COMPLETELY;
+		OLE_HRT(br->Refresh2(&v));
+	} else {
+		OLE_HRT(br->Refresh());
+	}
+	OLE_CATCH
+}
+
 /************************************************************************
  * IExplorerComponent native methods
  */
@@ -976,6 +992,44 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
 		::InvalidateRect(hwndChild, &rc, FALSE);
 		::UpdateWindow(hwndChild);
 	}
+}
+
+/*
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    refresh
+ */
+struct RefreshAction : public BrowserAction
+{
+    JIExplorer *m_pThis;
+    BOOL bClearCache;
+
+    RefreshAction(
+        JIExplorer *pThis,
+        BOOL _bClearCache
+    ):m_pThis(pThis),
+      bClearCache(_bClearCache)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        m_pThis->Refresh(bClearCache);
+        return S_OK; 
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_refresh(
+    JNIEnv *env, 
+    jobject self,
+    jboolean clearCache)
+{
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        pThis->GetThread()->MakeAction(
+            env,
+            "Refresh error",
+            RefreshAction(
+                pThis,
+                clearCache));
+    }
 }
 
 } /* extern "C" */

@@ -32,4 +32,10 @@ public class InternetExplorerBrowser extends BrComponent implements WebBrowser, 
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public void reload() {
+        // TODO Auto-generated method stub
+        
+    }
 }

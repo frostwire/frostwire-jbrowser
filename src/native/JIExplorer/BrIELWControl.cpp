@@ -753,6 +753,7 @@ HRESULT CBrIELWControl::Invoke(
                 DLCTL_NO_RUNACTIVEXCTLS;
             return S_OK;
         }
+		//pVarResult->lVal = DLCTL_DLIMAGES | DLCTL_VIDEOS | DLCTL_BGSOUNDS | DLCTL_SILENT;
         return DISP_E_MEMBERNOTFOUND;
 	case DISPID_DOCUMENTCOMPLETE:
 		STRACE0(_T("DOCUMENT_COMPLETE"));
@@ -859,6 +860,10 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::GetHostInfo(DOCHOSTUIINFO *pInfo)
 	// in a new browser window when the user clicks on some link
 	// (DOCHOSTUIFLAG_OPENNEWWIN), and lots of other things. See the MSDN docs
 	// on the DOCHOSTUIINFO struct passed to us.
+
+	//pInfo->dwFlags = (hasScrollbars ? 0 : DOCHOSTUIFLAG_SCROLL_NO) | DOCHOSTUIFLAG_NO3DOUTERBORDER;
+	pInfo->dwFlags = DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DISABLE_HELP_MENU |
+		DOCHOSTUIFLAG_DISABLE_SCRIPT_INACTIVE;
 
 	return S_OK;
 }

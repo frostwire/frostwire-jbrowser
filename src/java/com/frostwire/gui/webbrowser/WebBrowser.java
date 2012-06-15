@@ -12,7 +12,7 @@ public interface WebBrowser {
 
     public void forward();
 
-    public void refreshContent();
+    public void reload();
 
     public void stop();
 
