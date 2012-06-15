@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by jdicWeb.rc
+// Used by JIExplorer.rc
 
 // Next default values for new objects
 // 
