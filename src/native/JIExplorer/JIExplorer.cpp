@@ -568,6 +568,24 @@ HRESULT JIExplorer::Connect(
     OLE_RETURN_HR
 }
 
+void JIExplorer::GoBack()
+{
+	OLE_TRY
+	IWebBrowser2Ptr br(m_spIWebBrowser2);
+	OLE_CHECK_NOTNULLSP(br)
+	OLE_HRT(br->GoBack());
+	OLE_CATCH
+}
+
+void JIExplorer::GoForward()
+{
+	OLE_TRY
+	IWebBrowser2Ptr br(m_spIWebBrowser2);
+	OLE_CHECK_NOTNULLSP(br)
+	OLE_HRT(br->GoForward());
+	OLE_CATCH
+}
+
 void JIExplorer::Refresh(BOOL bClearCache)
 {
 	OLE_TRY
@@ -1029,6 +1047,72 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
             RefreshAction(
                 pThis,
                 clearCache));
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    back
+ */
+struct BackAction : public BrowserAction
+{
+    JIExplorer *m_pThis;
+
+    BackAction(
+        JIExplorer *pThis
+    ):m_pThis(pThis)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        m_pThis->GoBack();
+        return S_OK; 
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_back(
+    JNIEnv *env, 
+    jobject self)
+{
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        pThis->GetThread()->MakeAction(
+            env,
+            "Back error",
+            BackAction(
+                pThis));
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    forward
+ */
+struct ForwardAction : public BrowserAction
+{
+    JIExplorer *m_pThis;
+
+    ForwardAction(
+        JIExplorer *pThis
+    ):m_pThis(pThis)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        m_pThis->GoForward();
+        return S_OK; 
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_forward(
+    JNIEnv *env, 
+    jobject self)
+{
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        pThis->GetThread()->MakeAction(
+            env,
+            "Forward error",
+            ForwardAction(
+                pThis));
     }
 }
 

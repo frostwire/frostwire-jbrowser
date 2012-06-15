@@ -105,16 +105,10 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     }
 
     @Override
-    public void back() {
-        // TODO Auto-generated method stub
-        
-    }
-
+    public native void back();
+    
     @Override
-    public void forward() {
-        // TODO Auto-generated method stub
-        
-    }
+    public native void forward();
 
     @Override
     public void reload() {
@@ -143,6 +137,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     native long create(long hwnd, int iPaintAlgorithm);
     public native void destroy();
     public native void setURL(String stURL, InputStream is);
+    
     public native void refresh(boolean clearCache);
     native public void nativeSetEnabled(boolean enabled);
     native public void nativeSetVisible(boolean aFlag);
