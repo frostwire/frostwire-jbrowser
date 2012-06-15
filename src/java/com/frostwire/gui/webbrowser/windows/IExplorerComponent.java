@@ -31,6 +31,8 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     protected int notifyCounter = 0;    
     protected boolean showOnZero = true;
     
+    private String url;
+    
    public IExplorerComponent() {
         setMinimumSize(new Dimension(10, 10));
     }
@@ -45,7 +47,10 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     @Override
     public void addNotify() {
         super.addNotify();
-        onAddNotify();        
+        onAddNotify();
+        if (url != null) {
+            nativeGo(url);
+        }
     }
     
     /**
@@ -100,19 +105,28 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     }
 
     @Override
-    public void setUrl(String url) {
-        setURL(url, null);
+    public void go(String url) {
+        this.url = url;
+        if (url != null)
+            nativeGo(url);
+        else {
+            nativeGo("about:blank");
+        }
     }
 
     @Override
-    public native void back();
+    public void back() {
+        nativeBack();
+    }
     
     @Override
-    public native void forward();
+    public void forward() {
+        nativeForward();
+    }
 
     @Override
     public void reload() {
-        refresh(false);
+        nativeReload();
     }
 
     @Override
@@ -136,11 +150,15 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     private static native void initIDs();
     native long create(long hwnd, int iPaintAlgorithm);
     public native void destroy();
-    public native void setURL(String stURL, InputStream is);
+    
     
     public native void refresh(boolean clearCache);
     native public void nativeSetEnabled(boolean enabled);
     native public void nativeSetVisible(boolean aFlag);
+    public native void nativeGo(String url);
+    public native void nativeBack();
+    public native void nativeForward();
+    public native void nativeReload();
 
     public native void nativeSetBounds();
     

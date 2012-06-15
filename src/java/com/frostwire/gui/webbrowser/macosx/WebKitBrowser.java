@@ -33,10 +33,10 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     }
 
     @Override
-    public void setUrl(String url) {
+    public void go(String url) {
         this.url = url;
         if (url != null)
-            sendMsg(JWebKit_loadURL, url.toString());
+            sendMsg(JWebKit_loadURL, url);
         else {
             sendMsg(JWebKit_loadURL, "about:blank");
         }
@@ -133,7 +133,7 @@ public class WebKitBrowser extends CocoaComponent implements WebBrowser {
     public void addNotify() {
         super.addNotify();
         if (url != null) {
-            sendMsg(JWebKit_loadURL, url.toString());
+            sendMsg(JWebKit_loadURL, url);
         }
     }
 

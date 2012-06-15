@@ -6,7 +6,7 @@ public interface WebBrowser {
 
     public Component getComponent();
 
-    public void setUrl(String url);
+    public void go(String url);
 
     public void back();
 

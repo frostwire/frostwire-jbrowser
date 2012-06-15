@@ -568,6 +568,18 @@ HRESULT JIExplorer::Connect(
     OLE_RETURN_HR
 }
 
+void JIExplorer::Go(IN BSTR bsURL)
+{
+	OLE_TRY
+	IWebBrowser2Ptr br(m_spIWebBrowser2);
+	OLE_CHECK_NOTNULLSP(br)
+	VARIANT v;
+	v.vt = VT_I4;
+	v.lVal = 0; // v.lVal = navNoHistory;
+	OLE_HRT(br->Navigate(bsURL, &v, _PO, _PO, _PO));
+	OLE_CATCH
+}
+
 void JIExplorer::GoBack()
 {
 	OLE_TRY
@@ -1034,7 +1046,7 @@ struct RefreshAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_refresh(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeRefresh(
     JNIEnv *env, 
     jobject self,
     jboolean clearCache)
@@ -1047,6 +1059,39 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
             RefreshAction(
                 pThis,
                 clearCache));
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    reload
+ */
+struct ReloadAction : public BrowserAction
+{
+    JIExplorer *m_pThis;
+
+    ReloadAction(
+        JIExplorer *pThis
+    ):m_pThis(pThis)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        m_pThis->Refresh(FALSE);
+        return S_OK; 
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeReload(
+    JNIEnv *env, 
+    jobject self)
+{
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        pThis->GetThread()->MakeAction(
+            env,
+            "Reload error",
+            ReloadAction(
+                pThis));
     }
 }
 
@@ -1069,7 +1114,7 @@ struct BackAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_back(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeBack(
     JNIEnv *env, 
     jobject self)
 {
@@ -1102,7 +1147,7 @@ struct ForwardAction : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_forward(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeForward(
     JNIEnv *env, 
     jobject self)
 {
@@ -1113,6 +1158,46 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerCompon
             "Forward error",
             ForwardAction(
                 pThis));
+    }
+}
+
+/*
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    go
+ * Signature: (Ljava/lang/String;)V
+ */
+struct GoAction : public BrowserAction{
+    JStringBuffer m_jstURL;
+    JIExplorer *m_pThis;
+
+    GoAction(
+        JIExplorer *pThis,
+        JNIEnv *env,
+        jstring jURL
+    ):m_pThis(pThis),
+      m_jstURL(env, jURL)
+    {}
+    virtual HRESULT Do(JNIEnv *env)
+    {
+        m_pThis->Go(_B(m_jstURL));
+		return S_OK; 
+    }
+};
+
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeGo(
+    JNIEnv *env, 
+    jobject self,
+    jstring jsURL)
+{
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+    if(pThis){
+        pThis->GetThread()->MakeAction(
+            env,
+            "Go error",
+            GoAction(
+                pThis,
+                env,
+                jsURL));
     }
 }
 

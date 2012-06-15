@@ -38,4 +38,10 @@ public class InternetExplorerBrowser extends BrComponent implements WebBrowser, 
         // TODO Auto-generated method stub
         
     }
+
+    @Override
+    public void go(String url) {
+        // TODO Auto-generated method stub
+        
+    }
 }

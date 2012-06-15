@@ -289,7 +289,7 @@ public class BrowserFrame extends javax.swing.JFrame {
     }
 
     private void onNavigate(ActionEvent evt) {
-        browser.setUrl(edAddress.getText());
+        browser.go(edAddress.getText());
     }
 
     private void bnBackActionPerformed(ActionEvent evt) {

@@ -102,6 +102,7 @@ private:
 	virtual void CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult);
 
 public:
+	void Go(IN BSTR bsURL);
 	void GoBack();
 	void GoForward();
 	void Refresh(BOOL bClearCache);
