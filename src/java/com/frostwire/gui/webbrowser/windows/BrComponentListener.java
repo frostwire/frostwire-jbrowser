@@ -18,7 +18,7 @@
  * USA.
  */
 
-package  com.frostwire.gui.browser.windows;
+package  com.frostwire.gui.webbrowser.windows;
 
 /**
  * The listener interface for receiving browser events.

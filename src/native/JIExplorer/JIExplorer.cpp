@@ -19,7 +19,7 @@
 
 // FrostWire Team: a lot of modifications
 #include "stdafx.h" 
-#include "IExplorer.h"
+#include "JIExplorer.h"
 #include "BrMain.h"
 #include "BrHolderThread.h"
 #include "windowsx.h"
@@ -65,23 +65,23 @@ _COM_SMARTPTR_TYPEDEF(IActiveScriptParseProcedure, __uuidof(IActiveScriptParsePr
 #endif// #if defined(__IActiveScriptParseProcedure_INTERFACE_DEFINED__)
 
 
-jclass    IExplorer::ms_IExplorerComponent = NULL;
+jclass    JIExplorer::ms_IExplorerComponent = NULL;
 
-jfieldID  IExplorer::ms_IExplorerComponent_x = NULL;
-jfieldID  IExplorer::ms_IExplorerComponent_y = NULL;
-jfieldID  IExplorer::ms_IExplorerComponent_width = NULL;
-jfieldID  IExplorer::ms_IExplorerComponent_height = NULL;
+jfieldID  JIExplorer::ms_IExplorerComponent_x = NULL;
+jfieldID  JIExplorer::ms_IExplorerComponent_y = NULL;
+jfieldID  JIExplorer::ms_IExplorerComponent_width = NULL;
+jfieldID  JIExplorer::ms_IExplorerComponent_height = NULL;
 
-jfieldID  IExplorer::ms_IExplorerComponent_data = NULL;
+jfieldID  JIExplorer::ms_IExplorerComponent_data = NULL;
 
-jmethodID IExplorer::ms_IExplorerComponent_postEvent = NULL;
-jmethodID IExplorer::ms_IExplorerComponent_callJava = NULL;
+jmethodID JIExplorer::ms_IExplorerComponent_postEvent = NULL;
+jmethodID JIExplorer::ms_IExplorerComponent_callJava = NULL;
 
-void IExplorer::initIDs(JNIEnv *env, jclass clazz)
+void JIExplorer::initIDs(JNIEnv *env, jclass clazz)
 {
     ms_IExplorerComponent = getGlobalJavaClazz(
         env,
-        "com/frostwire/gui/browser/windows/IExplorerComponent"
+        "com/frostwire/gui/webbrowser/windows/IExplorerComponent"
     );
 
     ms_IExplorerComponent_x = env->GetFieldID(ms_IExplorerComponent, "x", "I");
@@ -106,7 +106,7 @@ void IExplorer::initIDs(JNIEnv *env, jclass clazz)
  * IExplorer methods
  */
 
-IExplorer::IExplorer(
+JIExplorer::JIExplorer(
     JNIEnv *env, 
     jobject othis
 )
@@ -118,7 +118,7 @@ IExplorer::IExplorer(
 {
 }
 
-HRESULT IExplorer::getTargetRect(
+HRESULT JIExplorer::getTargetRect(
     JNIEnv *env, 
     LPRECT prc)
 {
@@ -132,7 +132,7 @@ HRESULT IExplorer::getTargetRect(
     return E_INVALIDARG;
 }
 
-HRESULT IExplorer::create(    
+HRESULT JIExplorer::create(    
     JNIEnv *env, 
     HWND    hParent,
     int     ePaintAlgorithm)
@@ -164,9 +164,9 @@ HRESULT IExplorer::create(
     OLE_RETURN_HR
 }
 
-IExplorer::~IExplorer()
+JIExplorer::~JIExplorer()
 {
-    SEP0(_T("~BrJComponent"));
+    SEP0(_T("~JIExplorer"));
     if(!bool(m_spIWebBrowser2) || NULL!=m_this){
         STRACE1(_T("alarm!"));
     }
@@ -175,7 +175,7 @@ IExplorer::~IExplorer()
     }
 }
 
-void IExplorer::destroy(JNIEnv *env)
+void JIExplorer::destroy(JNIEnv *env)
 {
     if(m_spIWebBrowser2){
         OLE_TRY
@@ -190,11 +190,11 @@ void IExplorer::destroy(JNIEnv *env)
     m_this = NULL;
 }
 
-void IExplorer::RedrawParentRect(LPRECT pRect)
+void JIExplorer::RedrawParentRect(LPRECT pRect)
 {
 }
 
-HRESULT IExplorer::SendIEEvent(
+HRESULT JIExplorer::SendIEEvent(
     int iId,
     LPTSTR lpName, 
     LPTSTR lpValue,
@@ -231,7 +231,7 @@ HRESULT IExplorer::SendIEEvent(
     OLE_RETURN_HR
 }
 
-void IExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
+void JIExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
 {
 	if (pDispParams->cArgs == 2)
 	{
@@ -263,7 +263,7 @@ void IExplorer::CallJava(DISPPARAMS* pDispParams, VARIANT* pVarResult)
 	}
 }
 
-LRESULT IExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT JIExplorer::NewIEProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRes = 0;
 
@@ -436,8 +436,10 @@ struct JavaInputStream : public CStubStream
     JNIEnv *m_env; 
 };
 
+jclass JavaInputStream::ms_jcidInputStream = NULL;
+jmethodID JavaInputStream::ms_jcidInputStream_readBytes = NULL;
 
-HRESULT IExplorer::Connect(
+HRESULT JIExplorer::Connect(
     IN BSTR bsURL, 
     IN JNIEnv *env, 
     IN jobject jis)
@@ -460,34 +462,34 @@ HRESULT IExplorer::Connect(
 }
 
 /************************************************************************
- * IExplorer native methods
+ * IExplorerComponent native methods
  */
 
 extern "C" {
 
 /*
- * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
  * Method:    initIDs
   */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_initIDs(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_initIDs(
     JNIEnv *env, 
     jclass cls)
 {
-    IExplorer::initIDs(env, cls);
+    JIExplorer::initIDs(env, cls);
 }
 
 /*
- * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
  * Method:    create
   */
-struct CreateAction2 : public BrowserAction
+struct CreateAction : public BrowserAction
 {
     HWND    m_parent;
-    IExplorer *m_pThis;
+    JIExplorer *m_pThis;
     int m_ePaintAlgorithm;
 
-    CreateAction2(
-        IExplorer *pThis,
+    CreateAction(
+        JIExplorer *pThis,
         HWND parent,
         int ePaintAlgorithm)
     : m_pThis(pThis),
@@ -500,19 +502,19 @@ struct CreateAction2 : public BrowserAction
     }
 };
 
-JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_create(
+JNIEXPORT jlong JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_create(
     JNIEnv *env, 
     jobject self,
     jlong parent,
     jint  ePaintAlgorithm)
 {
-	IExplorer *pThis = new IExplorer(env, self);
+	JIExplorer *pThis = new JIExplorer(env, self);
 	if(pThis){
         OLE_TRY
         OLE_HRT(pThis->GetThread()->MakeAction(
             env,
             "Browser create error",
-            CreateAction2(
+            CreateAction(
                 pThis,
                 (HWND)parent,
                 ePaintAlgorithm)));
@@ -527,13 +529,13 @@ JNIEXPORT jlong JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponen
 }
 
 /*
- * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
  * Method:    destroy
   */
-struct DestroyAction2 : public BrowserAction
+struct DestroyAction : public BrowserAction
 {
-    IExplorer *m_pThis;
-    DestroyAction2(IExplorer *pThis)
+    JIExplorer *m_pThis;
+    DestroyAction(JIExplorer *pThis)
     : m_pThis(pThis)
     {}
 
@@ -542,33 +544,33 @@ struct DestroyAction2 : public BrowserAction
         return S_OK;
     }
 };
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_destroy(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_destroy(
     JNIEnv *env, 
     jobject self)
 {
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
     if(pThis){
         pThis->GetThread()->MakeAction(
             env,
             "Browser destroy error",
-            DestroyAction2(pThis));
+            DestroyAction(pThis));
         delete pThis;
-        env->SetLongField(self, IExplorer::ms_IExplorerComponent_data, 0L);
+        env->SetLongField(self, JIExplorer::ms_IExplorerComponent_data, 0L);
     }
 }
 
 /*
- * Class:     sun.awt.windows.WBrComponentPeer
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
  * Method:    execJS
  */
-struct ExecJSAction2 : public BrowserAction
+struct ExecJSAction : public BrowserAction
 {
-    IExplorer *m_pThis;
+    JIExplorer *m_pThis;
     JStringBuffer m_jstCode;
     _bstr_t m_bsResult;
 
-    ExecJSAction2(
-        IExplorer *pThis,
+    ExecJSAction(
+        JIExplorer *pThis,
         JNIEnv *env,
         jstring jsCode
     ): m_pThis(pThis),
@@ -700,15 +702,15 @@ struct ExecJSAction2 : public BrowserAction
     }
 };
 
-JNIEXPORT jstring JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_execJS(
+JNIEXPORT jstring JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_execJS(
     JNIEnv *env, 
     jobject self,
     jstring jsCode)
 {
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
     if(pThis){
         OLE_TRY
-        ExecJSAction2 a(
+        ExecJSAction a(
             pThis,
             env,
             jsCode);
@@ -724,17 +726,17 @@ JNIEXPORT jstring JNICALL Java_com_frostwire_gui_browser_windows_IExplorerCompon
 }
 
 /*
- * Class:     org_jdic_web_peer_WBrComponentPeer
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
  * Method:    setURL
  * Signature: (Ljava/lang/String;)V
  */
-struct SetURLAction2 : public BrowserAction{
+struct SetURLAction : public BrowserAction{
     JStringBuffer m_jstURL;
-    IExplorer *m_pThis;
+    JIExplorer *m_pThis;
     jobject m_jisURL;
 
-    SetURLAction2(
-        IExplorer *pThis,
+    SetURLAction(
+        JIExplorer *pThis,
         JNIEnv *env,
         jstring jURL,
         jobject jisURL
@@ -754,18 +756,18 @@ struct SetURLAction2 : public BrowserAction{
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_setURL(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_setURL(
     JNIEnv *env, 
     jobject self,
     jstring jsURL,
     jobject jisURL)
 {
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
     if(pThis){
         pThis->GetThread()->MakeAction(
             env,
             "URL navigation error",
-            SetURLAction2(
+            SetURLAction(
                 pThis,
                 env,
                 jsURL,
@@ -775,16 +777,16 @@ JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent
 
 
 /*
- * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
  * Method:    setVisible
  */
-struct ShowAction2 : public BrowserAction
+struct ShowAction : public BrowserAction
 {
-    IExplorer *m_pThis;
+    JIExplorer *m_pThis;
     BOOL bShow;
 
-    ShowAction2(
-        IExplorer *pThis,
+    ShowAction(
+        JIExplorer *pThis,
         BOOL _bShow
     ):m_pThis(pThis),
       bShow(_bShow)
@@ -796,33 +798,33 @@ struct ShowAction2 : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_setVisible(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeSetVisible(
     JNIEnv *env, 
     jobject self,
     jboolean aFlag)
 {
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
     if(pThis){
         pThis->GetThread()->MakeAction(
             env,
             "ShowWindow error",
-            ShowAction2(
+            ShowAction(
                 pThis,
                 aFlag));
     }
 }
 
 /*
- * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
- * Method:    setEnabled
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    nativeSetEnabled
  */
-struct EnableAction2 : public BrowserAction
+struct EnableAction : public BrowserAction
 {
-    IExplorer *m_pThis;
+    JIExplorer *m_pThis;
     BOOL bEnable;
 
-    EnableAction2(
-        IExplorer *pThis,
+    EnableAction(
+        JIExplorer *pThis,
         BOOL _bEnable
     ):m_pThis(pThis),
       bEnable(_bEnable)
@@ -834,156 +836,39 @@ struct EnableAction2 : public BrowserAction
     }
 };
 
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_setEnabled(
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeSetEnabled(
     JNIEnv *env, 
     jobject self,
     jboolean enabled)
 {
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
+    JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
     if(pThis){
         pThis->GetThread()->MakeAction(
             env,
             "EnableWindow error",
-            EnableAction2(
+            EnableAction(
                 pThis,
                 enabled));
     }
 }
 
 /*
- * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
- * Method:    nativePosOnScreen
+ * Class:     com_frostwire_gui_webbrowser_windows_IExplorerComponent
+ * Method:    nativeSetBounds
  */
-struct ReshapeAction2 : public BrowserAction
+JNIEXPORT void JNICALL Java_com_frostwire_gui_webbrowser_windows_IExplorerComponent_nativeSetBounds(
+	JNIEnv *env, 
+	jobject self)
 {
-    IExplorer *m_pThis;
-    jint x, y, w, h;
-
-    ReshapeAction2(
-        IExplorer *pThis,
-        jint _x, jint _y, jint _w, jint _h
-    ):m_pThis(pThis),
-      x(_x), y(_y), w(_w), h(_h)
-    {}
-    virtual HRESULT Do(JNIEnv *env)
-    {
-        MoveWindow(m_pThis->GetTopWnd(), x, y, w, h, TRUE);
-        return S_OK; 
-    }
-};
-
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_nativePosOnScreen(
-    JNIEnv *env, 
-    jobject self,
-    jint x, jint y, jint w, jint h)
-{
-    SEP0(_T("nativePosOnScreen"))
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
-    if(pThis){
-        STRACE0(_T("nativePosOnScreen x:%d y:%d w:%d h:%d"), x, y, w, h);
-        POINT pt = {x, y};
-        MapWindowPoints(
-            NULL,
-            pThis->GetParent(),
-            &pt,
-            1);
-        if( -1==w || -1==h){
-            RECT rc;
-            GetWindowRect(pThis->GetTopWnd(), &rc);
-            if( -1==w ){
-                w = rc.right - rc.left;
-            }    
-            if( -1==h ){
-                h = rc.bottom - rc.top;
-            }
-        }
-        pThis->GetThread()->MakeAction(
-            env,
-            "Reshape error",
-            ReshapeAction2(
-                        pThis,
-                        pt.x, pt.y, w, h)
-        );
-    }
-}
-
-/*
- * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
- * Method:    clearRgn
- */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_clearRgn(
-    JNIEnv *env, 
-    jobject self)
-{
-    SEP0(_T("clearRgn"))
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
-    if(pThis && pThis->m_hChildArea){
-        DeleteObject((HGDIOBJ)pThis->m_hChildArea);
-        pThis->m_hChildArea = CreateRectRgn(0,0,0,0);
-    }
-}
-
-/*
- * Class:     com_frostwire_gui_browser_windows_WBrComponentPeer
- * Method:    clearRgn
- */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_clipChild(
-    JNIEnv *env, 
-    jobject self,
-    jint x, jint y, jint w, jint h)
-{
-    SEP0(_T("clipChild"))
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
-    if(pThis ){
-        HRGN rg = CreateRectRgn(x, y, x+w, y+h);
-        if(NULL!=rg){
-            CombineRgn(
-                pThis->m_hChildArea,
-                pThis->m_hChildArea,
-                rg,
-                RGN_OR
-            );
-            DeleteObject((HGDIOBJ)rg);
-        }
-    }
-}
-
-/*
- * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
- * Method:    nativeRepaint
- */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_nativePaint(
-    JNIEnv *env, 
-    jobject self)
-{
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
-    if(pThis ){
-		RECT rc;
-		::GetWindowRect(pThis->GetParent(), &rc);
-		HWND hwndChild = GetWindow(pThis->GetParent(), GW_CHILD);
-       ::InvalidateRect(hwndChild, &rc, FALSE);
-	   ::UpdateWindow(hwndChild);
-    }
-}
-
-/*
- * Class:     com_frostwire_gui_browser_windows_IExplorerComponent
- * Method:    clearRgn
- */
-JNIEXPORT void JNICALL Java_com_frostwire_gui_browser_windows_IExplorerComponent_resizeControl(
-    JNIEnv *env, 
-    jobject self)
-{
-    SEP0(_T("resizeControl"))
-    IExplorer *pThis = (IExplorer *)env->GetLongField(self, IExplorer::ms_IExplorerComponent_data);
-    if(pThis ){
+	JIExplorer *pThis = (JIExplorer *)env->GetLongField(self, JIExplorer::ms_IExplorerComponent_data);
+	if(pThis ){
 		RECT rc;
 		::GetWindowRect(pThis->GetParent(),&rc);
 		HWND hwndChild = GetWindow(pThis->GetParent(), GW_CHILD);
-        ::SetWindowPos(hwndChild,NULL,0,0,rc.right-rc.left,rc.bottom-rc.top,SWP_NOZORDER|SWP_NOACTIVATE|SWP_SHOWWINDOW|SWP_NOMOVE | SWP_NOCOPYBITS);
+		::SetWindowPos(hwndChild,NULL,0,0,rc.right-rc.left,rc.bottom-rc.top,SWP_NOZORDER|SWP_NOACTIVATE|SWP_SHOWWINDOW|SWP_NOMOVE | SWP_NOCOPYBITS);
 		::InvalidateRect(hwndChild, &rc, FALSE);
-	   ::UpdateWindow(hwndChild);
-    }
+		::UpdateWindow(hwndChild);
+	}
 }
 
 } /* extern "C" */

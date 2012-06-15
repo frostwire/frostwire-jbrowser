@@ -109,9 +109,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="BrIELWControl.cpp" />
-    <ClCompile Include="BrJComponent.cpp" />
     <ClCompile Include="BrMain.cpp" />
-    <ClCompile Include="IExplorer.cpp" />
+    <ClCompile Include="JIExplorer.cpp" />
     <ClCompile Include="jni\canonicalize_md.c" />
     <ClCompile Include="jni\jni_util.c" />
     <ClCompile Include="jni\jni_util_md.c" />
@@ -125,9 +124,8 @@
     <ClInclude Include="awt_trace.h" />
     <ClInclude Include="BrHolderThread.h" />
     <ClInclude Include="BrIELWControl.h" />
-    <ClInclude Include="BrJComponent.h" />
     <ClInclude Include="BrMain.h" />
-    <ClInclude Include="IExplorer.h" />
+    <ClInclude Include="JIExplorer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

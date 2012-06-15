@@ -1,4 +1,4 @@
-package com.frostwire.gui.browser.windows;
+package com.frostwire.gui.webbrowser.windows;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -144,9 +144,41 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
     native long create(long hwnd, int iPaintAlgorithm);
     public native void destroy();
     public native void setURL(String stURL, InputStream is);
+    native public void nativeSetEnabled(boolean enabled);
+    native public void nativeSetVisible(boolean aFlag);
 
-    public native void resizeControl();
-    public native void nativePaint();
+    public native void nativeSetBounds();
+    
+    /**
+     * Makes the component visible or invisible.  
+     * @param aFlag  <code>true</code> to make the component visible; 
+     * <code>false</code> to make it invisible
+     */
+    @Override
+    public void setVisible(boolean aFlag){
+        super.setVisible(aFlag);
+        if( data!=0 ) {
+            nativeSetVisible(isVisible());
+        }
+    }
+
+    /**
+     * Sets whether or not this component is enabled. A component that is 
+     * enabled may respond to user input, while a component that is not enabled 
+     * cannot respond to user input. Some components may alter their visual 
+     * representation when they are disabled in order to provide feedback to 
+     * the user that they cannot take input. <br/>
+     * Note: Disabling a component does not disable its children.<br/>
+     * @param enabled <code>true</code> if this component should be enabled, 
+     * <code>false</code> otherwise
+     */
+    @Override
+    public void setEnabled(boolean enabled){
+        super.setVisible(enabled);
+        if( data!=0 ) {
+            nativeSetEnabled(isEnabled());
+        }
+    }
     
     
     @Override
@@ -163,7 +195,7 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
 //                    width,
 //                    height);
            //nativePaint();
-            resizeControl();
+            nativeSetBounds();
             //nativePaint();
         }
     }
@@ -221,8 +253,6 @@ public class IExplorerComponent extends Canvas implements WebBrowser {
                 new BrComponentEvent(this, iId, stName, stValue));
     }
     
-    public native void clearRgn();
-    public native void clipChild(int top, int left, int width, int height);
     public native String execJS(String code);
     public native void nativePosOnScreen(int x, int y, int width, int height);
     

@@ -3,8 +3,8 @@ package com.frostwire.gui.browser;
 import java.awt.Toolkit;
 
 import com.frostwire.gui.browser.macosx.WebKitBrowser;
-import com.frostwire.gui.browser.windows.IExplorerComponent;
-import com.frostwire.gui.browser.windows.InternetExplorerBrowser;
+import com.frostwire.gui.webbrowser.windows.IExplorerComponent;
+import com.frostwire.gui.webbrowser.windows.InternetExplorerBrowser;
 
 public final class BrowserFactory {
 
