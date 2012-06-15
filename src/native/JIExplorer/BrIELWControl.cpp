@@ -845,7 +845,16 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowHelp(HWND hwnd,
 HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowContextMenu(DWORD dwID,
 	POINT *ppt, IUnknown *pcmdtReserved, IDispatch *pdispReserved)
 {
-	return E_NOTIMPL;
+	// Do not show context menus by default with S_OK.
+    HRESULT hr(S_OK);
+
+    // If text select or control menu, then return S_FALSE to show menu.
+    if( dwID == CONTEXT_MENU_TEXTSELECT || 
+        dwID == CONTEXT_MENU_CONTROL) {
+        hr = S_FALSE;
+	}
+
+    return hr;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::GetHostInfo(DOCHOSTUIINFO *pInfo)
@@ -861,9 +870,9 @@ HRESULT STDMETHODCALLTYPE CBrIELWControl::GetHostInfo(DOCHOSTUIINFO *pInfo)
 	// on the DOCHOSTUIINFO struct passed to us.
 
 	//pInfo->dwFlags = (hasScrollbars ? 0 : DOCHOSTUIFLAG_SCROLL_NO) | DOCHOSTUIFLAG_NO3DOUTERBORDER;
-	pInfo->dwFlags = DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DISABLE_HELP_MENU;
+	pInfo->dwFlags = DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_DISABLE_HELP_MENU | DOCHOSTUIFLAG_SCROLL_NO;
 
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 HRESULT STDMETHODCALLTYPE CBrIELWControl::ShowUI(DWORD dwID,
