@@ -34,20 +34,20 @@ public class BrowserFrame extends JFrame implements WebBrowserListener {
 
     private static final long serialVersionUID = -7065448910990348234L;
 
-    private JButton bnBack;
-    private JButton bnForward;
-    private JButton bnGo;
-    private JButton bnReload;
-    private JButton bnStop;
+    private JButton buttonBack;
+    private JButton buttonForward;
+    private JButton buttonGo;
+    private JButton buttonReload;
+    private JButton buttonStop;
 
-    private JTextField edAddress;
-    private JMenu fileJMenu;
-    private JToolBar ieToolBar;
-    private JPanel jPanel1;
-    private JLabel lbURL;
-    private JMenuBar mainJMenuBar;
-    private JMenuItem miExit;
-    private JMenu toolsJMenu;
+    private JTextField textAddress;
+    private JMenu menuFile;
+    private JToolBar toolBarMain;
+    private JPanel panelMain;
+    private JLabel labelUrl;
+    private JMenuBar menuBarMain;
+    private JMenuItem menuExit;
+    private JMenu menuTools;
     private JMenuItem menuRunJS;
     private JMenuItem menuRunJS2;
 
@@ -58,19 +58,19 @@ public class BrowserFrame extends JFrame implements WebBrowserListener {
     }
 
     private void initComponents() {
-        jPanel1 = new JPanel();
-        ieToolBar = new JToolBar();
-        bnBack = new JButton();
-        bnForward = new JButton();
-        bnReload = new JButton();
-        bnStop = new JButton();
-        lbURL = new JLabel();
-        edAddress = new JTextField();
-        bnGo = new JButton();
-        mainJMenuBar = new JMenuBar();
-        fileJMenu = new JMenu();
-        miExit = new JMenuItem();
-        toolsJMenu = new JMenu();
+        panelMain = new JPanel();
+        toolBarMain = new JToolBar();
+        buttonBack = new JButton();
+        buttonForward = new JButton();
+        buttonReload = new JButton();
+        buttonStop = new JButton();
+        labelUrl = new JLabel();
+        textAddress = new JTextField();
+        buttonGo = new JButton();
+        menuBarMain = new JMenuBar();
+        menuFile = new JMenu();
+        menuExit = new JMenuItem();
+        menuTools = new JMenu();
 
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -80,105 +80,105 @@ public class BrowserFrame extends JFrame implements WebBrowserListener {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new ImageIcon(getClass().getResource("/images/reload.png")).getImage());
 
-        jPanel1.setLayout(new BorderLayout());
+        panelMain.setLayout(new BorderLayout());
 
         browser = BrowserFactory.instance().createBrowser();
         browser.setListener(this);
         browser.go("http://www.google.com");
 
-        jPanel1.add(browser.getComponent(), BorderLayout.CENTER);
+        panelMain.add(browser.getComponent(), BorderLayout.CENTER);
 
-        ieToolBar.setRollover(true);
+        toolBarMain.setRollover(true);
 
-        bnBack.setIcon(new ImageIcon(getClass().getResource("/images/back.png")));
-        bnBack.setToolTipText("Go back one page");
-        bnBack.setFocusable(false);
-        bnBack.setHorizontalTextPosition(SwingConstants.CENTER);
-        bnBack.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttonBack.setIcon(new ImageIcon(getClass().getResource("/images/back.png")));
+        buttonBack.setToolTipText("Go back one page");
+        buttonBack.setFocusable(false);
+        buttonBack.setHorizontalTextPosition(SwingConstants.CENTER);
+        buttonBack.setVerticalTextPosition(SwingConstants.BOTTOM);
 
-        bnBack.addActionListener(new ActionListener() {
+        buttonBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                bnBackActionPerformed(evt);
+                buttonBack_actionPerformed(evt);
             }
         });
-        ieToolBar.add(bnBack);
+        toolBarMain.add(buttonBack);
 
-        bnForward.setIcon(new ImageIcon(getClass().getResource("/images/forward.png")));
-        bnForward.setToolTipText("Go forward one page");
-        bnForward.setFocusable(false);
-        bnForward.setHorizontalTextPosition(SwingConstants.CENTER);
-        bnForward.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttonForward.setIcon(new ImageIcon(getClass().getResource("/images/forward.png")));
+        buttonForward.setToolTipText("Go forward one page");
+        buttonForward.setFocusable(false);
+        buttonForward.setHorizontalTextPosition(SwingConstants.CENTER);
+        buttonForward.setVerticalTextPosition(SwingConstants.BOTTOM);
 
-        bnForward.addActionListener(new ActionListener() {
+        buttonForward.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                bnForwardActionPerformed(evt);
+                buttonForward_actionPerformed(evt);
             }
         });
-        ieToolBar.add(bnForward);
+        toolBarMain.add(buttonForward);
 
-        bnReload.setIcon(new ImageIcon(getClass().getResource("/images/reload.png")));
-        bnReload.setToolTipText("Reload current page");
-        bnReload.setFocusable(false);
-        bnReload.setHorizontalTextPosition(SwingConstants.CENTER);
-        bnReload.setVerticalTextPosition(SwingConstants.BOTTOM);
-        bnReload.addActionListener(new ActionListener() {
+        buttonReload.setIcon(new ImageIcon(getClass().getResource("/images/reload.png")));
+        buttonReload.setToolTipText("Reload current page");
+        buttonReload.setFocusable(false);
+        buttonReload.setHorizontalTextPosition(SwingConstants.CENTER);
+        buttonReload.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttonReload.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                bnReloadActionPerformed(evt);
+                buttonReload_actionPerformed(evt);
             }
         });
-        ieToolBar.add(bnReload);
+        toolBarMain.add(buttonReload);
 
-        bnStop.setIcon(new ImageIcon(getClass().getResource("/images/stop.png")));
-        bnStop.setToolTipText("Stop current page");
-        bnStop.setFocusable(false);
-        bnStop.setHorizontalTextPosition(SwingConstants.CENTER);
-        bnStop.setVerticalTextPosition(SwingConstants.BOTTOM);
-        bnStop.addActionListener(new ActionListener() {
+        buttonStop.setIcon(new ImageIcon(getClass().getResource("/images/stop.png")));
+        buttonStop.setToolTipText("Stop current page");
+        buttonStop.setFocusable(false);
+        buttonStop.setHorizontalTextPosition(SwingConstants.CENTER);
+        buttonStop.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttonStop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                bnStopActionPerformed(evt);
+                buttonStop_actionPerformed(evt);
             }
         });
-        ieToolBar.add(bnStop);
+        toolBarMain.add(buttonStop);
 
-        lbURL.setText(" URL:");
-        ieToolBar.add(lbURL);
+        labelUrl.setText(" URL:");
+        toolBarMain.add(labelUrl);
 
-        edAddress.setText("http://");
-        edAddress.setToolTipText("URL for navigation");
-        edAddress.setPreferredSize(new Dimension(400, 20));
-        edAddress.addActionListener(new ActionListener() {
+        textAddress.setText("http://");
+        textAddress.setToolTipText("URL for navigation");
+        textAddress.setPreferredSize(new Dimension(400, 20));
+        textAddress.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                onNavigate(evt);
+                textAddress_actionPerformed(evt);
             }
         });
-        ieToolBar.add(edAddress);
+        toolBarMain.add(textAddress);
 
-        bnGo.setText("Go");
-        bnGo.setToolTipText("Go to entered URL");
-        bnGo.setFocusable(false);
-        bnGo.setHorizontalTextPosition(SwingConstants.CENTER);
-        bnGo.setVerticalTextPosition(SwingConstants.BOTTOM);
-        bnGo.addActionListener(new ActionListener() {
+        buttonGo.setText("Go");
+        buttonGo.setToolTipText("Go to entered URL");
+        buttonGo.setFocusable(false);
+        buttonGo.setHorizontalTextPosition(SwingConstants.CENTER);
+        buttonGo.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttonGo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                onNavigate(evt);
+                textAddress_actionPerformed(evt);
             }
         });
-        ieToolBar.add(bnGo);
+        toolBarMain.add(buttonGo);
 
-        jPanel1.add(ieToolBar, BorderLayout.PAGE_START);
+        panelMain.add(toolBarMain, BorderLayout.PAGE_START);
 
-        fileJMenu.setText("File");
-        fileJMenu.setToolTipText("File Operations");
+        menuFile.setText("File");
+        menuFile.setToolTipText("File Operations");
 
-        miExit.setText("Exit");
-        miExit.addActionListener(new ActionListener() {
+        menuExit.setText("Exit");
+        menuExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                miExitActionPerformed(evt);
+                menuExit_actionPerformed(evt);
             }
         });
-        fileJMenu.add(miExit);
+        menuFile.add(menuExit);
 
-        mainJMenuBar.add(fileJMenu);
+        menuBarMain.add(menuFile);
 
         menuRunJS = new JMenuItem();
         menuRunJS.setText("Run JS");
@@ -198,18 +198,18 @@ public class BrowserFrame extends JFrame implements WebBrowserListener {
             }
         });
 
-        toolsJMenu.setText("Tools");
-        toolsJMenu.add(menuRunJS);
-        toolsJMenu.add(menuRunJS2);
+        menuTools.setText("Tools");
+        menuTools.add(menuRunJS);
+        menuTools.add(menuRunJS2);
 
-        mainJMenuBar.add(toolsJMenu);
+        menuBarMain.add(menuTools);
 
-        setJMenuBar(mainJMenuBar);
+        setJMenuBar(menuBarMain);
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jPanel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE));
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jPanel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE));
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(panelMain, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE));
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(panelMain, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE));
 
         pack();
     }
@@ -222,27 +222,27 @@ public class BrowserFrame extends JFrame implements WebBrowserListener {
         browser.runJS("alert(testFn('hello'))");
     }
 
-    private void miExitActionPerformed(ActionEvent evt) {
+    protected void menuExit_actionPerformed(ActionEvent evt) {
         System.exit(0);
     }
 
-    private void onNavigate(ActionEvent evt) {
-        browser.go(edAddress.getText());
+    protected void textAddress_actionPerformed(ActionEvent evt) {
+        browser.go(textAddress.getText());
     }
 
-    private void bnBackActionPerformed(ActionEvent evt) {
+    protected void buttonBack_actionPerformed(ActionEvent evt) {
         browser.back();
     }
 
-    private void bnForwardActionPerformed(ActionEvent evt) {
+    protected void buttonForward_actionPerformed(ActionEvent evt) {
         browser.forward();
     }
 
-    private void bnReloadActionPerformed(ActionEvent evt) {
+    protected void buttonReload_actionPerformed(ActionEvent evt) {
         browser.reload();
     }
 
-    private void bnStopActionPerformed(ActionEvent evt) {
+    protected void buttonStop_actionPerformed(ActionEvent evt) {
         browser.stop();
     }
 
