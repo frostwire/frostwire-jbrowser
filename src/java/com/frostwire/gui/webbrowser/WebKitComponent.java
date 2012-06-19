@@ -1,5 +1,5 @@
 /*
- * Created by Angel Leon (@gubatron), Alden Torres (aldenml)
+ * Created by Alden Torres (aldenml)
  * Copyright (c) 2011, 2012, FrostWire(TM). All rights reserved.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,6 @@ import java.util.Map;
 import com.apple.eawt.CocoaComponent;
 
 /**
- * @author gubatron
  * @author aldenml
  *
  */

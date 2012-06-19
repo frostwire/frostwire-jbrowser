@@ -1,4 +1,4 @@
-frostwire-jbrowser
+frostwire-jwebbrowser
 ==================
 
-The ultimate Web browser component for Java. Light, Lean, Simple.
+The ultimate Web browser component for Java. Light, Simple.
