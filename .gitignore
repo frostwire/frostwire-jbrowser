@@ -10,3 +10,7 @@ JIExplorer.sdf
 JIExplorer.suo
 JIExplorer.vcxproj.user
 JIExplorer.vcxproj.filters
+
+# Gradle artifacts
+.gradle/
+build/
